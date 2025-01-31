@@ -1,0 +1,352 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id            String       @id @default(cuid())
+  name          String?
+  email         String?      @unique
+  emailVerified DateTime?    @map("email_verified")
+  image         String?
+  contact       String?
+  provinsi      String?
+  kota          String?
+  kecamatan     String?
+  kelurahan     String?
+  address       String?
+  OTP           String?
+  role          String?
+  pencarian     Json?
+  Status        String?
+  laporan       Laporan[]
+  accounts      Account[]
+  sessions      Session[]
+  tokos         Toko[]
+  lowongans     Lowongan[]
+  pesanan       Pesanan[]
+  notifikasi    Notifikasi[]
+  agenda        Agenda[]
+  QuickChat     QuickChat[]
+  userName      String?      @unique
+  password      String?
+  CreateDateAt  DateTime     @default(now())
+  UpdatedAt     DateTime     @updatedAt
+
+  Komunitas    Komunitas[]
+  UlasanProduk UlasanProduk[]
+  Takur        Takur[]
+}
+
+model Takur {
+  id        String      @id @default(cuid())
+  User      User?       @relation(fields: [UserId], references: [email])
+  UserId    String?
+  transaksi String?
+  status    String?
+  hewan     Json?
+  Class     Json?
+  riwayat   Json?
+  notiv     Notifikasi? @relation(fields: [notivId], references: [id])
+  notivId   String?
+  CreateDateAt  DateTime     @default(now())
+  UpdatedAt     DateTime     @updatedAt
+}
+
+model Pesanan {
+  id           String      @id @default(cuid())
+  nomorPesanan String
+  status       String
+  pesan        User?       @relation(fields: [PesanId], references: [email])
+  PesanId      String?
+  notiv        Notifikasi? @relation(fields: [notivId], references: [id])
+  notivId      String?
+  produk       Produk[]
+  CreateDateAt DateTime    @default(now())
+  UpdatedAt    DateTime    @updatedAt
+}
+
+model Notifikasi {
+  id           String       @id @default(cuid())
+  judulPesan   String
+  StatusPesan  String
+  keterangan   String
+  statusNotiv  String
+  Notiv        User?        @relation(fields: [NotivId], references: [email])
+  NotivId      String?
+  NotivToko    Toko?        @relation(fields: [NotivTokoId], references: [id])
+  NotivTokoId  String?
+  pesanan      Pesanan[]
+  PesananMHQ   PesananMhq[]
+  agendas      Agenda[]
+  CreateDateAt DateTime     @default(now())
+  UpdatedAt    DateTime     @updatedAt
+  Takur        Takur[]
+}
+
+model Toko {
+  id            String       @id @default(cuid())
+  namaToko      String
+  deskripsi     String
+  katagories    String
+  nomorContact  String
+  provinsi      String
+  kota          String
+  Kecamatan     String
+  Kelurahan     String
+  alamat        String
+  Latitude      String
+  Longitude     String
+  fotoProfile   String?
+  fotoDashboard String?
+  jadwal        String?
+  jamOprasional String?
+  website       String?
+  instagram     String?
+  star          String?
+  produk        Produk[]
+  quickChat     QuickChat[]
+  laporan       Laporan[]
+  Notifikasi    Notifikasi[]
+  Author        User?        @relation(fields: [AuthorId], references: [email])
+  AuthorId      String?
+  CreateDateAt  DateTime     @default(now())
+  UpdatedAt     DateTime     @updatedAt
+}
+
+model Produk {
+  id            String         @id @default(cuid())
+  namaProduk    String
+  detailProduk  String
+  hargaProduk   String
+  variantProduk Json?
+  hargavariant  Json?
+  fotoProduk    Json?
+  video         Json?
+  Stok          String?
+  catProduk     String
+  volume        String?
+  berat         String?
+  JenisProduk   String?
+  Lokasi        String?
+  diskon        String?
+  ulasanProduk  UlasanProduk[]
+  toko          Toko?          @relation(fields: [tokoId], references: [id])
+  tokoId        String?        @map("toko_id")
+  Pesanan       Pesanan?       @relation(fields: [PesananId], references: [id])
+  PesananId     String?
+  CreateDateAt  DateTime       @default(now())
+  UpdatedAt     DateTime       @updatedAt
+}
+
+model QuickChat {
+  id           String   @id @default(cuid())
+  ulasan       String
+  toko         Toko?    @relation(fields: [tokoId], references: [id])
+  tokoId       String   @map("toko_id")
+  Author       User?    @relation(fields: [AuthorId], references: [email])
+  AuthorId     String?
+  CreateDateAt DateTime @default(now())
+  UpdatedAt    DateTime @updatedAt
+}
+
+model Laporan {
+  id           String   @id @default(cuid())
+  ulasan       String
+  nama         String
+  toko         Toko?    @relation(fields: [tokoId], references: [id])
+  tokoId       String   @map("toko_id")
+  Author       User?    @relation(fields: [AuthorId], references: [email])
+  AuthorId     String?
+  CreateDateAt DateTime @default(now())
+  UpdatedAt    DateTime @updatedAt
+}
+
+model UlasanProduk {
+  id           String   @id @default(cuid())
+  ulasan       String
+  start        Json?
+  fotoUlasan   Json?
+  produk       Produk?  @relation(fields: [produkId], references: [id], onDelete: Cascade)
+  produkId     String   @map("produk_id")
+  Author       User?    @relation(fields: [AuthorId], references: [email])
+  AuthorId     String?
+  CreateDateAt DateTime @default(now())
+  UpdatedAt    DateTime @updatedAt
+}
+
+model Lowongan {
+  id                String   @id @default(cuid())
+  namaLowongan      String
+  namaInstansi      String
+  provinsi          String
+  kota              String
+  katagori          String
+  deskripsiLowongan String
+  requirement       String
+  Salary            String
+  expired           String
+  Latitude          String?
+  longitude         String?
+  fotoProfile       String?
+  background        String?
+  nocontact         String
+  linkGform         String?
+  users             User?    @relation(fields: [userId], references: [email], onDelete: Cascade)
+  userId            String?  @map("user_id")
+  CreateDateAt      DateTime @default(now())
+  UpdatedAt         DateTime @updatedAt
+}
+
+model Mhq {
+  id          String       @id @default(cuid())
+  fotoProfile String
+  alamat      String
+  lokasi      String
+  contact     String
+  iklan       Json?
+  hewan       Hewan[]
+  pesananMhq  PesananMhq[]
+}
+
+model Hewan {
+  id           String   @id @default(cuid())
+  gambar       Json?
+  lokasi       String?
+  bobot        String
+  jenisHewan   String
+  Kelas        String
+  noReg        String
+  status       String
+  Harga        String
+  datapesanan  Mhq?     @relation(fields: [pesananId], references: [id], onDelete: Cascade)
+  pesananId    String?  @map("user_id")
+  CreateDateAt DateTime @default(now())
+  UpdatedAt    DateTime @updatedAt
+}
+
+model PesananMhq {
+  id               String      @id @default(cuid())
+  email            String?
+  namaPembeli      String
+  alamat           String
+  contact          String
+  statusQurban     String
+  jenisHewan       String
+  noReg            String?
+  idHewan          String
+  jenisPaket       String
+  pengiriman       String
+  StatusPembelian  String?
+  statusPesanan    String
+  statusPembayaran String?
+  buktiTransfer    String
+  penyembelihan    String?
+  bagianDaging     String?
+  dokumentasi      String?
+  nofaktur         String?
+  buktiditerima    String?
+  Sales            String?
+  datapesanan      Mhq?        @relation(fields: [pesananId], references: [id], onDelete: Cascade)
+  pesananId        String?     @map("user_id")
+  notiv            Notifikasi? @relation(fields: [notivId], references: [id])
+  notivId          String?
+  CreateDateAt     DateTime    @default(now())
+  UpdatedAt        DateTime    @updatedAt
+}
+
+model Agenda {
+  id                String      @id @default(cuid())
+  namaKegiatan      String
+  namaInstansi      String
+  fotoProfile       String?
+  background        String?
+  deskripsiKegiatan String
+  jadwal            String
+  Jam               String
+  fee               String?
+  kategori          String
+  instagram         String?
+  facebook          String?
+  tiktok            String?
+  Latitude          String?
+  longitude         String?
+  kota              String?
+  provinsi          String?
+  status            String
+  kontak            String
+  users             User?       @relation(fields: [userId], references: [email], onDelete: Cascade)
+  userId            String?     @map("user_id")
+  notiv             Notifikasi? @relation(fields: [notivId], references: [id])
+  notivId           String?
+  CreateDateAt      DateTime    @default(now())
+  UpdatedAt         DateTime    @updatedAt
+  Komunitas         Komunitas?  @relation(fields: [komunitasId], references: [id])
+  komunitasId       String?
+}
+
+model Komunitas {
+  id          String   @id @default(cuid())
+  fotoProfile String
+  dashboard   String
+  deskripsi   String
+  alamat      String
+  instagram   String?
+  facebook    String?
+  tiktok      String?
+  lokasi      String
+  contact     String
+  iklan       Json?
+  Agenda      Agenda[]
+  users       User?    @relation(fields: [userId], references: [email], onDelete: Cascade)
+  userId      String?  @map("user_id")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
