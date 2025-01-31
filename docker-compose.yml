@@ -1,18 +1,24 @@
-version: '3'
+version: '3.8'
 services:
   app:
     build: .
-    ports:
-      - "3000:3000"
     environment:
-      - NODE_ENV=production
+      - DATABASE_URL=postgresql://nestjs:qwerty1234@db:5432/nestjs_postgres
     depends_on:
       - db
-  db:
-    image: postgres:17
+  nginx:
+    image: nginx:latest
     ports:
-     - 5432:5432
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+  db:
+    image: postgres:13
     environment:
-      POSTGRES_USER  :  postgres
-      POSTGRES_PASSWORD : 123
-      POSTGRES_DB : mydatabase
+      POSTGRES_USER: nestjs
+      POSTGRES_PASSWORD: qwerty1234
+      POSTGRES_DB: nestjs_postgres
+    ports:
+      - "5432:5432"
