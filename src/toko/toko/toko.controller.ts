@@ -33,7 +33,8 @@ export class TokoController {
   async EditStore(
     @Body() Req: stateToko,
     @Query('email') email: string,
+    @Query('id') id: string,
   ): Promise<stateToko> {
-    return this.toko.CreateToko(Req, email);
+    return this.toko.UpdateToko(Req, email, id);
   }
 }

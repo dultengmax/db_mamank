@@ -7,45 +7,42 @@ import {
   Query,
   UseFilters,
 } from '@nestjs/common';
-import { LowonganService } from './lowongan.service';
 import { ValidationFilter } from 'src/validation/validation/validation.filter';
-import { stateLowongan } from './lowongan.model';
+import { AgendaService } from './agenda.service';
+import { stateAgenda } from './lowongan.model';
 
-@Controller('api/lowongan')
-export class LowonganController {
-  constructor(private toko: LowonganService) {}
+@Controller('api/agenda')
+export class AgendaController {
+  constructor(private agenda: AgendaService) {}
 
   // ini contoh method yang mengembalikan semua data user
-  @Post('createlowongan')
+  @Post('createagenda')
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
   async CreateStore(
-    @Body() Req: stateLowongan,
+    @Body() Req: stateAgenda,
     @Query('email') email: string,
-  ): Promise<stateLowongan> {
-    return this.toko.CreateLowongan(Req, email);
+  ): Promise<stateAgenda> {
+    return this.agenda.CreateAgenda(Req, email);
   }
-  @Post('editlowongan')
+  @Post('editagenda')
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
   async EditStore(
-    @Body() Req: stateLowongan,
+    @Body() Req: stateAgenda,
     @Query('email') email: string,
     @Query('id') id: string,
-  ): Promise<stateLowongan> {
-    return this.toko.UpdateLowongan(Req, email, id);
+  ): Promise<stateAgenda> {
+    return this.agenda.editAgenda(email, Req, id);
   }
 
-  @Post('deletelowongan')
+  @Post('deleteagenda')
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
-  async deleteLowongan(
-    @Query('email') email: string,
-    @Query('id') id: string,
-  ): Promise<stateLowongan> {
-    return this.toko.DeleteLowongan(email, id);
+  async deleteLowongan(@Query('id') id: string): Promise<stateAgenda> {
+    return this.agenda.deleteAgenda(id);
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable, HttpException } from '@nestjs/common';
 import { ValidationService } from 'src/validation/validation/validation.service';
-import { stateToko } from './lowongan.model';
-import { UserSchemaToko } from './lowongan.validation';
+import { stateLowongan } from './lowongan.model';
+import { UserSchema } from './lowongan.validation';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
 
 @Injectable()
@@ -11,8 +11,11 @@ export class LowonganService {
     private validate: ValidationService,
   ) {}
 
-  async CreateToko(data: stateToko, id: string): Promise<stateToko> {
-    const result = await this.validate.validate(UserSchemaToko, data);
+  async CreateLowongan(
+    data: stateLowongan,
+    id: string,
+  ): Promise<stateLowongan> {
+    const result = await this.validate.validate(UserSchema, data);
     const users = await this.prisma.user.findUnique({
       where: {
         email: id,
@@ -21,32 +24,34 @@ export class LowonganService {
     if (!users) {
       throw new HttpException('User not found', 404);
     }
-    const toko = await this.prisma.toko.createMany({
+    const toko = await this.prisma.lowongan.createMany({
       data: {
-        namaToko: result.namaToko,
-        deskripsi: result.deskripsi,
-        katagories: result.katagories,
-        kota: result.kota,
+        namaLowongan: result.namaLowongan,
+        namaInstansi: result.namaInstansi,
         provinsi: result.provinsi,
-        alamat: result.alamat,
-        nomorContact: result.nomorContact,
-        jadwal: result.jadwal,
-        jamOprasional: result.jamOprasional,
-        Latitude: result.Latitude,
-        Kecamatan: result.kecamatan,
-        Kelurahan: result.kelurahan,
-        Longitude: result.longitude,
+        kota: result.kota,
+        katagori: result.katagori,
+        expired: result.expired,
+        deskripsiLowongan: result.deskripsiLowongan,
+        requirement: result.requirement,
+        Salary: result.Salary,
+        nocontact: result.nocontact,
+        linkGform: result.linkGform,
+        fotoProfile: result.fotoProfile,
+        background: result.background,
+        userId: users.email,
       },
     });
+
     return toko[0];
   }
 
-  async UpdateToko(
-    data: stateToko,
+  async UpdateLowongan(
+    data: stateLowongan,
     email: string,
     id: string,
-  ): Promise<stateToko> {
-    const result = await this.validate.validate(UserSchemaToko, data);
+  ): Promise<stateLowongan> {
+    const result = await this.validate.validate(UserSchema, data);
     const users = await this.prisma.user.findUnique({
       where: {
         email: email,
@@ -55,27 +60,85 @@ export class LowonganService {
     if (!users) {
       throw new HttpException('User not found', 404);
     }
-    const toko = await this.prisma.toko.updateMany({
+    const toko = await this.prisma.lowongan.updateMany({
       where: {
         id: id,
-        AuthorId: users.email,
+        userId: users.email,
       },
       data: {
-        namaToko: result.namaToko,
-        deskripsi: result.deskripsi,
-        katagories: result.katagories,
-        kota: result.kota,
-        provinsi: result.provinsi,
-        alamat: result.alamat,
-        nomorContact: result.nomorContact,
-        jadwal: result.jadwal,
-        jamOprasional: result.jamOprasional,
-        Latitude: result.Latitude,
-        Kecamatan: result.kecamatan,
-        Kelurahan: result.kelurahan,
-        Longitude: result.longitude,
+        namaLowongan: result.namaLowongan,
+        namaInstansi: result.namaLowongan,
+        provinsi: result.namaLowongan,
+        kota: result.namaLowongan,
+        katagori: result.namaLowongan,
+        expired: result.namaLowongan,
+        deskripsiLowongan: result.namaLowongan,
+        requirement: result.namaLowongan,
+        Salary: result.namaLowongan,
+        nocontact: result.namaLowongan,
+        linkGform: result.namaLowongan,
+        fotoProfile: result.namaLowongan,
+        background: result.namaLowongan,
       },
     });
     return toko[0];
+  }
+  async DeleteLowongan(email: string, id: string): Promise<stateLowongan> {
+    const users = await this.prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+    if (!users) {
+      throw new HttpException('User not found', 404);
+    }
+    const loker = await this.prisma.lowongan.delete({
+      where: {
+        id: id,
+        userId: users.email,
+      },
+    });
+    return loker;
+  }
+
+  async Findlowongan(skip: number, limits: number) {
+    try {
+      const loker = await this.prisma.lowongan.findMany({
+        skip: (skip - 1) * limits,
+        take: limits,
+      });
+      return loker;
+    } catch (error) {
+      throw new HttpException(`Internal Server Error ${error}`, 500);
+    }
+  }
+  async Findlowonganbyid(id: string) {
+    try {
+      const loker = await this.prisma.lowongan.findMany({
+        where: {
+          id: id,
+        },
+      });
+      return loker;
+    } catch (error) {
+      throw new HttpException(`Internal Server Error ${error}`, 500);
+    }
+  }
+  async FindlowonganbyKategories(skip: number, limits: number, cat: string) {
+    try {
+      const loker = await this.prisma.lowongan.findMany({
+        where: {
+          katagori: cat,
+        },
+        orderBy: {
+          CreateDateAt: 'desc',
+        },
+        skip: (skip - 1) * limits,
+        take: limits,
+      });
+      return loker;
+    } catch (error) {
+      throw new HttpException(`Internal Server Error ${error}`, 500);
+    }
   }
 }

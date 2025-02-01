@@ -4,6 +4,7 @@ services:
     build: .
     environment:
       - DATABASE_URL=postgresql://nestjs:qwerty1234@db:5432/nestjs_postgres
+      - password="226bca3c-d192-4fd4-a622-8da16d14b7bd"
     depends_on:
       - db
   nginx:

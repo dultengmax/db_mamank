@@ -107,8 +107,26 @@ export class UsersController {
     return this.user.contactUser(Req);
   }
 
+ //ini controllers untuk menampilkan data users
 
+ @Get('/find')
+ @HttpCode(200)
+ @Header('Content-Type', 'application/json')
+ @UseFilters(ValidationFilter)
+ FindUsers(
+   @Query('id') id: string,
+ ): Promise<User> {
+   return this.user.FindUser(id);
+ }
+ //ini controllers untuk menampilkan data users
 
+ @Get('/all')
+ @HttpCode(200)
+ @Header('Content-Type', 'application/json')
+ @UseFilters(ValidationFilter)
+ Finds(): Promise<User[]> {
+   return this.user.FindUserMany();
+ }
 
 // /=======================================================////
 

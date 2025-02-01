@@ -8,4 +8,4 @@ import { PrismaModule } from 'src/prisma/prisma.module';
   controllers: [LowonganController],
   providers: [LowonganService],
 })
-export class TokoModule {}
+export class LowonganModule {}

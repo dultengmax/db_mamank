@@ -22,7 +22,6 @@ export class UsersService {
     private PrismaService: PrismaService,
     private validate: ValidationService,
     private jwtService: JwtService
-
   ) {}
   async register(reg: RegisterUserRequest): Promise<RegisterUserRequest> {
     const result = this.validate.validate(UserSchema, reg);
@@ -74,9 +73,6 @@ export class UsersService {
 
     return {access: await this.jwtService.signAsync(payload),};
   }
-
-
-
   async fotoprofile(foto: fotoProfileRequest): Promise<User> {
     const users = await this.PrismaService.user.findUnique({
       where: {
@@ -165,6 +161,40 @@ export class UsersService {
     })
 
     return contacts;
+  }
+  async FindUserMany(): Promise<User[]> {
+    try{
+      const users = await this.PrismaService.user.findMany({
+   
+      });
+      if(!users){
+        throw new HttpException('User not found', 404);
+      }
+  
+      return users;
+    }catch(error){
+      console.error(error);
+      throw new HttpException('Internal Server Error', 500);
+    }
+
+  }
+  async FindUser(id:string): Promise<User> {
+    try{
+      const users = await this.PrismaService.user.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      if(!users){
+        throw new HttpException('User not found', 404);
+      }
+  
+      return users;
+    }catch(error){
+      console.error(error);
+      throw new HttpException('Internal Server Error', 500);
+    }
+
   }
 }
 export { RegisterUserRequest };
