@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Header,
   HttpCode,
   Post,
@@ -36,5 +37,19 @@ export class TokoController {
     @Query('id') id: string,
   ): Promise<stateToko> {
     return this.toko.UpdateToko(Req, email, id);
+  }
+
+  @Get('findToko/:id')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  async FindToko(@Query('id') id: string): Promise<stateToko> {
+    return this.toko.FindToko(id);
+  }
+
+  @Get('tokoAll')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  async FindTokoAll(): Promise<stateToko[]> {
+    return this.toko.FindTokoMany();
   }
 }

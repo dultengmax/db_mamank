@@ -101,7 +101,7 @@ export class LowonganService {
     return loker;
   }
 
-  async Findlowongan(skip: number, limits: number) {
+  async Findlowongan(skip: number, limits: number): Promise<stateLowongan[]> {
     try {
       const loker = await this.prisma.lowongan.findMany({
         skip: (skip - 1) * limits,

@@ -26,10 +26,16 @@ export class UsersService {
   async register(reg: RegisterUserRequest): Promise<RegisterUserRequest> {
     const result = this.validate.validate(UserSchema, reg);
     const dataUser = await this.PrismaService.user.count({
-      where: { userName: result.userName },
+      where: { userName: result.userName  },
     });
     if (dataUser !== 0) {
       throw new HttpException('Username already exists', 406);
+    }
+    const dataEmail = await this.PrismaService.user.count({
+      where: { email: result.email  },
+    });
+    if (dataEmail !== 0) {
+      throw new HttpException('email already exists', 407);
     }
     const hash = await bcrypt.hash(result.password, 10);
     const users = await this.PrismaService.user.create({

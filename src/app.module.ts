@@ -16,6 +16,10 @@ import { LowonganModule } from './lowongan/lowongan.module';
 import { LowonganService } from './lowongan/lowongan/lowongan.service';
 import { AgendaModule } from './agenda/agenda.module';
 import { AgendaService } from './agenda/agenda/agenda.service';
+import { ProdukModule } from './produk/produk.module';
+import { NotificationModule } from './notification/notification.module';
+import { LaporanModule } from './laporan/laporan.module';
+import { PaymentModule } from './payment/payment.module';
 @Module({
   imports: [
     WinstonModule.forRoot({
@@ -35,6 +39,10 @@ import { AgendaService } from './agenda/agenda/agenda.service';
     TokoModule,
     LowonganModule,
     AgendaModule,
+    ProdukModule,
+    NotificationModule,
+    LaporanModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [

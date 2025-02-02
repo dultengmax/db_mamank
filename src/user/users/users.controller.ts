@@ -169,7 +169,11 @@ export class UsersController {
   //     return `${request.params.id}`;
   //   }
   @Get('/helli')
-  async llo(@Query('name') name: string): Promise<string> {
-    return `brooo ${name}`;
+  async llo(
+    @Query('name') name: string,
+    @Query('email') email: string,
+    @Query('greet') greet: string,
+): Promise<string> {
+    return `brooo ${name} ${email} ${greet}`;
   }
 }

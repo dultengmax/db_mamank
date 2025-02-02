@@ -79,4 +79,26 @@ export class TokoService {
     });
     return toko[0];
   }
+  async FindToko(id: string): Promise<stateToko> {
+    try {
+      const toko = await this.prisma.toko.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      return toko;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('User not found', 404);
+    }
+  }
+  async FindTokoMany(): Promise<stateToko[]> {
+    try {
+      const toko = await this.prisma.toko.findMany({});
+      return toko;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('User not found', 404);
+    }
+  }
 }

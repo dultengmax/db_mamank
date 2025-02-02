@@ -1,8 +1,8 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { ValidationService } from 'src/validation/validation/validation.service';
-import { stateAgenda } from './lowongan.model';
 import { AgendaSchema } from './agenda.validation';
+import { stateAgenda } from './agenda.model';
 
 @Injectable()
 export class AgendaService {
@@ -101,5 +101,46 @@ export class AgendaService {
     });
 
     return toko;
+  }
+
+  async FindAgenda(skip: number, limits: number) {
+    try {
+      const loker = await this.prisma.agenda.findMany({
+        skip: (skip - 1) * limits,
+        take: limits,
+      });
+      return loker;
+    } catch (error) {
+      throw new HttpException(`Internal Server Error ${error}`, 500);
+    }
+  }
+  async Findagendabyid(id: string) {
+    try {
+      const loker = await this.prisma.agenda.findMany({
+        where: {
+          id: id,
+        },
+      });
+      return loker;
+    } catch (error) {
+      throw new HttpException(`Internal Server Error ${error}`, 500);
+    }
+  }
+  async FindagendabyKategories(skip: number, limits: number, cat: string) {
+    try {
+      const loker = await this.prisma.agenda.findMany({
+        where: {
+          kategori: cat,
+        },
+        orderBy: {
+          CreateDateAt: 'desc',
+        },
+        skip: (skip - 1) * limits,
+        take: limits,
+      });
+      return loker;
+    } catch (error) {
+      throw new HttpException(`Internal Server Error ${error}`, 500);
+    }
   }
 }
