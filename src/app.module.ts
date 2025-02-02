@@ -20,6 +20,7 @@ import { ProdukModule } from './produk/produk.module';
 import { NotificationModule } from './notification/notification.module';
 import { LaporanModule } from './laporan/laporan.module';
 import { PaymentModule } from './payment/payment.module';
+import { ProdukService } from './produk/produk/produk.service';
 @Module({
   imports: [
     WinstonModule.forRoot({
@@ -52,6 +53,7 @@ import { PaymentModule } from './payment/payment.module';
     TokoService,
     LowonganService,
     AgendaService,
+    ProdukService,
   ],
 })
 export class AppModule implements NestModule {

@@ -24,7 +24,7 @@ export class LowonganService {
     if (!users) {
       throw new HttpException('User not found', 404);
     }
-    const toko = await this.prisma.lowongan.createMany({
+    const Lowongan = await this.prisma.lowongan.create({
       data: {
         namaLowongan: result.namaLowongan,
         namaInstansi: result.namaInstansi,
@@ -43,7 +43,20 @@ export class LowonganService {
       },
     });
 
-    return toko[0];
+    const notification = await this.prisma.notifikasi.create({
+      data: {
+        judulPesan: 'selamat lowongan anda berhasil dibuat',
+        StatusPesan: `lowongan anda ${Lowongan.namaLowongan} berhasil dibuat`,
+        keterangan: 'String',
+        statusNotiv: 'lowongan berhasil dibuat',
+        NotivId: users.email,
+      },
+    });
+    if (!notification.statusNotiv) {
+      throw new HttpException('User not found', 404);
+    }
+
+    return Lowongan;
   }
 
   async UpdateLowongan(
@@ -81,6 +94,23 @@ export class LowonganService {
         background: result.namaLowongan,
       },
     });
+
+    const notification = await this.prisma.notifikasi.updateMany({
+      where: {
+        NotivId: users.email,
+      },
+      data: {
+        judulPesan: `selamat lowongan ${result.namaLowongan} anda berhasil diupdate`,
+        StatusPesan: 'berhasil diupdate',
+        keterangan: 'String',
+        statusNotiv: 'ready',
+        NotivId: users.email,
+      },
+    });
+    if (!notification[0].statusNotiv) {
+      throw new HttpException('User not found', 404);
+    }
+
     return toko[0];
   }
   async DeleteLowongan(email: string, id: string): Promise<stateLowongan> {
@@ -98,6 +128,22 @@ export class LowonganService {
         userId: users.email,
       },
     });
+
+    const notification = await this.prisma.notifikasi.updateMany({
+      where: {
+        NotivId: users.email,
+      },
+      data: {
+        judulPesan: `selamat lowongan anda berhasil dihapus`,
+        StatusPesan: 'berhasil diupdate',
+        keterangan: 'String',
+        statusNotiv: 'ready',
+        NotivId: users.email,
+      },
+    });
+    if (!notification[0].statusNotiv) {
+      throw new HttpException('User not found', 404);
+    }
     return loker;
   }
 

@@ -40,6 +40,18 @@ export class ProdukService {
         PesananId: result.pesananId,
       },
     });
+    const notification = await this.prisma.notifikasi.create({
+      data: {
+        judulPesan: `selamat produk anda ${produk.namaProduk} berhasil dibuat`,
+        StatusPesan: 'berhasil diupdate',
+        keterangan: 'String',
+        statusNotiv: 'create',
+        NotivTokoId: id,
+      },
+    });
+    if (!notification[0].statusNotiv) {
+      throw new HttpException('User not found', 404);
+    }
     return produk;
   }
   async UpdateProduk(
@@ -77,6 +89,23 @@ export class ProdukService {
         PesananId: result.pesananId,
       },
     });
+
+    const notification = await this.prisma.notifikasi.updateMany({
+      where: {
+        NotivTokoId: id,
+      },
+      data: {
+        judulPesan: `selamat produk anda ${produk.namaProduk} berhasil di update`,
+        StatusPesan: 'berhasil diupdate',
+        keterangan: 'String',
+        statusNotiv: 'update',
+        NotivTokoId: id,
+      },
+    });
+    if (!notification[0].statusNotiv) {
+      throw new HttpException('User not found', 404);
+    }
+
     return produk;
   }
   async DeleteProduk(id: string) {
@@ -86,6 +115,22 @@ export class ProdukService {
           id: id,
         },
       });
+
+      const notification = await this.prisma.notifikasi.updateMany({
+        where: {
+          NotivTokoId: id,
+        },
+        data: {
+          judulPesan: `selamat produk anda ${produk.namaProduk} berhasil di hapus`,
+          StatusPesan: 'berhasil dihapus',
+          keterangan: 'String',
+          statusNotiv: 'delete',
+          NotivTokoId: id,
+        },
+      });
+      if (!notification[0].statusNotiv) {
+        throw new HttpException('User not found', 404);
+      }
       return produk;
     } catch (error) {
       console.log(error);
@@ -129,6 +174,25 @@ export class ProdukService {
         skip: parseInt(skip),
         take: parseInt(limits),
       });
+      return produk;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('User not found', 404);
+    }
+  }
+  async SearchProduk(name: string, skip: string, limits: string) {
+    try {
+      const produk = await this.prisma.produk.findMany({
+        where: {
+          namaProduk: name,
+        },
+        skip: parseInt(skip),
+        take: parseInt(limits),
+        orderBy: {
+          CreateDateAt: 'desc',
+        },
+      });
+
       return produk;
     } catch (error) {
       console.log(error);

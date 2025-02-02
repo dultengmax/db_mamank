@@ -11,3 +11,12 @@ export class stateToko {
   Latitude: string | undefined;
   AuthorId: string | undefined;
 }
+
+export class stateNotif {
+  judulPesan: string;
+  StatusPesan: string;
+  keterangan: string;
+  statusNotiv: string;
+  NotivId: string;
+  NotivTokoId: string;
+}

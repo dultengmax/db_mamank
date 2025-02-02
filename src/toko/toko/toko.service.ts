@@ -39,6 +39,20 @@ export class TokoService {
         AuthorId: users.email,
       },
     });
+
+    const notification = await this.prisma.notifikasi.create({
+      data: {
+        judulPesan: `selamat toko anda bernama ${result.namaToko} berhasil dibuat`,
+        StatusPesan: `toko berhasil dibuat pada ${toko.CreateDateAt}`,
+        keterangan: 'bismillah semoga lancar usahanya  ',
+        statusNotiv: 'toko berhasil dibuat',
+        NotivId: users.email,
+        NotivTokoId: toko.id,
+      },
+    });
+    if (!notification.statusNotiv) {
+      throw new HttpException('User not found', 404);
+    }
     return toko;
   }
 
@@ -77,6 +91,25 @@ export class TokoService {
         Longitude: result.longitude,
       },
     });
+
+    if (!toko.count) {
+      throw new HttpException('User not found', 404);
+    }
+    const notification = await this.prisma.notifikasi.updateMany({
+      where: {
+        NotivId: users.email,
+        NotivTokoId: id,
+      },
+      data: {
+        judulPesan: 'toko anda berhasil di update',
+        StatusPesan: `update berhasil pada ${new Date()}`,
+        keterangan: 'toko baru saja di update',
+        statusNotiv: 'toko berhasil dibuat',
+      },
+    });
+    if (!notification[0].statusNotiv) {
+      throw new HttpException('User not found', 404);
+    }
     return toko[0];
   }
   async FindToko(id: string): Promise<stateToko> {

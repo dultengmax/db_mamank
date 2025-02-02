@@ -41,6 +41,18 @@ export class AgendaService {
       },
     });
 
+    const notification = await this.prisma.notifikasi.create({
+      data: {
+        judulPesan: `selamat anda berasil menambahkan event bernama ${result.namaKegiatan} berhasil dibuat`,
+        StatusPesan: 'agenda berhasil dibuat',
+        keterangan: 'String',
+        statusNotiv: 'delete',
+        NotivId: users.email,
+      },
+    });
+    if (!notification[0].statusNotiv) {
+      throw new HttpException('User not found', 404);
+    }
     return toko;
   }
   async editAgenda(
@@ -82,6 +94,22 @@ export class AgendaService {
       },
     });
 
+    const notification = await this.prisma.notifikasi.updateMany({
+      where: {
+        NotivId: users.email,
+      },
+      data: {
+        judulPesan: `selamat agenda anda ${result.namaKegiatan} berhasil diunpdate`,
+        StatusPesan: 'berhasil diupdate',
+        keterangan: 'String',
+        statusNotiv: 'delete',
+        NotivId: users.email,
+      },
+    });
+    if (!notification[0].statusNotiv) {
+      throw new HttpException('User not found', 404);
+    }
+
     return toko;
   }
   async deleteAgenda(id: string): Promise<stateAgenda> {
@@ -99,6 +127,22 @@ export class AgendaService {
         userId: users.email,
       },
     });
+
+    const notification = await this.prisma.notifikasi.updateMany({
+      where: {
+        NotivId: users.email,
+      },
+      data: {
+        judulPesan: `selamat agenda anda berhasil dihapus`,
+        StatusPesan: 'berhasil dihapus',
+        keterangan: 'String',
+        statusNotiv: 'delete',
+        NotivId: users.email,
+      },
+    });
+    if (!notification[0].statusNotiv) {
+      throw new HttpException('User not found', 404);
+    }
 
     return toko;
   }
