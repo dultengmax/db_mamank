@@ -76,4 +76,14 @@ export class LowonganController {
   ): Promise<stateLowongan[]> {
     return this.lowongan.FindlowonganbyKategories(skip, limits, cat);
   }
+  @Get('searchLowongan')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  async SearchLowongan(
+    @Query('skip') skip: number,
+    @Query('limits') limits: number,
+    @Query('name') name: string,
+  ): Promise<stateLowongan[]> {
+    return this.lowongan.SearchLowongan(name, skip, limits);
+  }
 }

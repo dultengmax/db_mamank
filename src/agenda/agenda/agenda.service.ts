@@ -187,4 +187,30 @@ export class AgendaService {
       throw new HttpException(`Internal Server Error ${error}`, 500);
     }
   }
+  async Searchagenda(
+    name: string,
+    skip: number,
+    limits: number,
+  ): Promise<stateAgenda[]> {
+    try {
+      if (name == null || name == '')
+        throw new HttpException('tidak ada pencarian', 405);
+      const agenda = await this.prisma.agenda.findMany({
+        where: {
+          namaKegiatan: {
+            contains: name,
+          },
+        },
+        orderBy: {
+          CreateDateAt: 'desc',
+        },
+        skip: (skip - 1) * limits,
+        take: limits,
+      });
+      return agenda;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('User not found', 404);
+    }
+  }
 }

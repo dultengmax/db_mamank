@@ -52,4 +52,10 @@ export class TokoController {
   async FindTokoAll(): Promise<stateToko[]> {
     return this.toko.FindTokoMany();
   }
+  @Get('searchToko')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  async SearchToko(@Query('cat') cat: string): Promise<stateToko[]> {
+    return this.toko.FindTokoSearch(cat);
+  }
 }

@@ -73,4 +73,14 @@ export class AgendaController {
   ): Promise<stateAgenda[]> {
     return this.agenda.FindagendabyKategories(skip, limits, cat);
   }
+  @Get('searchAgenda')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  async Searchagenda(
+    @Query('skip') skip: number,
+    @Query('limits') limits: number,
+    @Query('name') name: string,
+  ): Promise<stateAgenda[]> {
+    return this.agenda.Searchagenda(name, skip, limits);
+  }
 }

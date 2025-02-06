@@ -187,4 +187,31 @@ export class LowonganService {
       throw new HttpException(`Internal Server Error ${error}`, 500);
     }
   }
+
+  async SearchLowongan(
+    name: string,
+    skip: number,
+    limits: number,
+  ): Promise<stateLowongan[]> {
+    try {
+      if (name == null || name == '')
+        throw new HttpException('tidak ada pencarian', 405);
+      const toko = await this.prisma.lowongan.findMany({
+        where: {
+          namaLowongan: {
+            contains: name,
+          },
+        },
+        orderBy: {
+          CreateDateAt: 'desc',
+        },
+        skip: (skip - 1) * limits,
+        take: limits,
+      });
+      return toko;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('User not found', 404);
+    }
+  }
 }

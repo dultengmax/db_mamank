@@ -21,6 +21,11 @@ import { NotificationModule } from './notification/notification.module';
 import { LaporanModule } from './laporan/laporan.module';
 import { PaymentModule } from './payment/payment.module';
 import { ProdukService } from './produk/produk/produk.service';
+import { UlasanModule } from './ulasan/ulasan.module';
+import { ComunityModule } from './comunity/comunity.module';
+import { TakurModule } from './takur/takur.module';
+import { ComunityController } from './comunity/src/src.controller';
+import { ComunityService } from './comunity/src/src.service';
 @Module({
   imports: [
     WinstonModule.forRoot({
@@ -44,8 +49,11 @@ import { ProdukService } from './produk/produk/produk.service';
     NotificationModule,
     LaporanModule,
     PaymentModule,
+    UlasanModule,
+    ComunityModule,
+    TakurModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, ComunityController],
   providers: [
     AppService,
     PrismaService,
@@ -54,6 +62,7 @@ import { ProdukService } from './produk/produk/produk.service';
     LowonganService,
     AgendaService,
     ProdukService,
+    ComunityService,
   ],
 })
 export class AppModule implements NestModule {

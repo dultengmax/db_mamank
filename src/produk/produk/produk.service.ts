@@ -182,9 +182,12 @@ export class ProdukService {
   }
   async SearchProduk(name: string, skip: string, limits: string) {
     try {
+      if (name === undefined || name === '') {
+        throw new HttpException('Name not found', 404);
+      }
       const produk = await this.prisma.produk.findMany({
         where: {
-          namaProduk: name,
+          namaProduk: { contains: name },
         },
         skip: parseInt(skip),
         take: parseInt(limits),

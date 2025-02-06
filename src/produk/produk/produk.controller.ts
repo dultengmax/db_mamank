@@ -78,4 +78,14 @@ export class ProdukController {
   ): Promise<any> {
     return this.produk.FindprodukbyCat(skip, limits, cat);
   }
+  @Get('searchProduk')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  async searchProduk(
+    @Query('name') name: string,
+    @Query('skip') skip: string,
+    @Query('limits') limits: string,
+  ): Promise<any> {
+    return this.produk.SearchProduk(skip, limits, name);
+  }
 }

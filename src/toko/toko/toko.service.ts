@@ -127,7 +127,55 @@ export class TokoService {
   }
   async FindTokoMany(): Promise<stateToko[]> {
     try {
-      const toko = await this.prisma.toko.findMany({});
+      const toko = await this.prisma.toko.findMany({
+        orderBy: {
+          CreateDateAt: 'desc',
+        },
+      });
+      return toko;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('User not found', 404);
+    }
+  }
+  async FindTokobycatagories(cat: string): Promise<stateToko[]> {
+    try {
+      const toko = await this.prisma.toko.findMany({
+        where: {
+          katagories: cat,
+        },
+      });
+      return toko;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('User not found', 404);
+    }
+  }
+  async FindTokoSearch(name: string): Promise<stateToko[]> {
+    try {
+      if (name == null || name == '')
+        throw new HttpException('tidak ada pencarian', 405);
+      const toko = await this.prisma.toko.findMany({
+        where: {
+          namaToko: {
+            contains: name,
+          },
+        },
+      });
+      return toko;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('User not found', 404);
+    }
+  }
+
+  async FindTokobyInternal(cat: string): Promise<stateToko[]> {
+    try {
+      const toko = await this.prisma.toko.findMany({
+        where: {
+          katagories: cat,
+        },
+      });
       return toko;
     } catch (error) {
       console.log(error);

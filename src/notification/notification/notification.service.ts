@@ -1,6 +1,8 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
+import { stateNotif } from 'src/toko/toko/toko.model';
 import { ValidationService } from 'src/validation/validation/validation.service';
+import { NotivSchema } from './notification.validation';
 
 @Injectable()
 export class NotificationService {
@@ -8,11 +10,8 @@ export class NotificationService {
     private prisma: PrismaService,
     private validate: ValidationService,
   ) {}
-  async AddNotification(
-    data: stateLowongan,
-    id: string,
-  ): Promise<stateLowongan> {
-    const result = await this.validate.validate(UserSchema, data);
+  async AddNotification(data: stateNotif, id: string): Promise<stateNotif> {
+    const result = await this.validate.validate(NotivSchema, data);
     const users = await this.prisma.user.findUnique({
       where: {
         email: id,
@@ -21,22 +20,12 @@ export class NotificationService {
     if (!users) {
       throw new HttpException('User not found', 404);
     }
-    const toko = await this.prisma.lowongan.createMany({
+    const toko = await this.prisma.notifikasi.create({
       data: {
-        namaLowongan: result.namaLowongan,
-        namaInstansi: result.namaInstansi,
-        provinsi: result.provinsi,
-        kota: result.kota,
-        katagori: result.katagori,
-        expired: result.expired,
-        deskripsiLowongan: result.deskripsiLowongan,
-        requirement: result.requirement,
-        Salary: result.Salary,
-        nocontact: result.nocontact,
-        linkGform: result.linkGform,
-        fotoProfile: result.fotoProfile,
-        background: result.background,
-        userId: users.email,
+        judulPesan: result.judulPesan,
+        StatusPesan: result.StatusPesan,
+        keterangan: result.keterangan,
+        statusNotiv: 'pending',
       },
     });
 
@@ -44,11 +33,11 @@ export class NotificationService {
   }
 
   async editNotification(
-    data: stateLowongan,
+    data: stateNotif,
     email: string,
     id: string,
-  ): Promise<stateLowongan> {
-    const result = await this.validate.validate(UserSchema, data);
+  ): Promise<stateNotif> {
+    const result = await this.validate.validate(NotivSchema, data);
     const users = await this.prisma.user.findUnique({
       where: {
         email: email,
@@ -57,30 +46,20 @@ export class NotificationService {
     if (!users) {
       throw new HttpException('User not found', 404);
     }
-    const toko = await this.prisma.lowongan.updateMany({
+    const toko = await this.prisma.notifikasi.updateMany({
       where: {
         id: id,
-        userId: users.email,
       },
       data: {
-        namaLowongan: result.namaLowongan,
-        namaInstansi: result.namaLowongan,
-        provinsi: result.namaLowongan,
-        kota: result.namaLowongan,
-        katagori: result.namaLowongan,
-        expired: result.namaLowongan,
-        deskripsiLowongan: result.namaLowongan,
-        requirement: result.namaLowongan,
-        Salary: result.namaLowongan,
-        nocontact: result.namaLowongan,
-        linkGform: result.namaLowongan,
-        fotoProfile: result.namaLowongan,
-        background: result.namaLowongan,
+        judulPesan: result.judulPesan,
+        StatusPesan: result.StatusPesan,
+        keterangan: result.keterangan,
+        statusNotiv: 'pending',
       },
     });
     return toko[0];
   }
-  async deleteNotification(email: string, id: string): Promise<stateLowongan> {
+  async deleteNotification(email: string, id: string) {
     const users = await this.prisma.user.findUnique({
       where: {
         email: email,
@@ -89,10 +68,9 @@ export class NotificationService {
     if (!users) {
       throw new HttpException('User not found', 404);
     }
-    const loker = await this.prisma.lowongan.delete({
+    const loker = await this.prisma.notifikasi.delete({
       where: {
         id: id,
-        userId: users.email,
       },
     });
     return loker;

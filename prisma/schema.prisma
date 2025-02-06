@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -79,18 +79,18 @@ model User {
 }
 
 model Takur {
-  id        String      @id @default(cuid())
-  User      User?       @relation(fields: [UserId], references: [email])
-  UserId    String?
-  transaksi String?
-  status    String?
-  hewan     Json?
-  Class     Json?
-  riwayat   Json?
-  notiv     Notifikasi? @relation(fields: [notivId], references: [id])
-  notivId   String?
-  CreateDateAt  DateTime     @default(now())
-  UpdatedAt     DateTime     @updatedAt
+  id           String      @id @default(cuid())
+  User         User?       @relation(fields: [UserId], references: [email])
+  UserId       String?
+  transaksi    String?
+  status       String?
+  hewan        Json?
+  Class        Json?
+  riwayat      Json?
+  notiv        Notifikasi? @relation(fields: [notivId], references: [id])
+  notivId      String?
+  CreateDateAt DateTime    @default(now())
+  UpdatedAt    DateTime    @updatedAt
 }
 
 model Pesanan {
@@ -177,6 +177,7 @@ model Produk {
   PesananId     String?
   CreateDateAt  DateTime       @default(now())
   UpdatedAt     DateTime       @updatedAt
+  Laporan       Laporan[]
 }
 
 model QuickChat {
@@ -196,8 +197,12 @@ model Laporan {
   nama         String
   toko         Toko?    @relation(fields: [tokoId], references: [id])
   tokoId       String   @map("toko_id")
+  produk       Produk?  @relation(fields: [produkId], references: [id])
+  produkId     String   @map("produk_id")
   Author       User?    @relation(fields: [AuthorId], references: [email])
   AuthorId     String?
+  Agenda       Agenda?  @relation(fields: [AgendaId], references: [id])
+  AgendaId     String?
   CreateDateAt DateTime @default(now())
   UpdatedAt    DateTime @updatedAt
 }
@@ -205,7 +210,7 @@ model Laporan {
 model UlasanProduk {
   id           String   @id @default(cuid())
   ulasan       String
-  start        Json?
+  start        String
   fotoUlasan   Json?
   produk       Produk?  @relation(fields: [produkId], references: [id], onDelete: Cascade)
   produkId     String   @map("produk_id")
@@ -323,23 +328,28 @@ model Agenda {
   UpdatedAt         DateTime    @updatedAt
   Komunitas         Komunitas?  @relation(fields: [komunitasId], references: [id])
   komunitasId       String?
+  Laporan           Laporan[]
+
 }
 
 model Komunitas {
-  id          String   @id @default(cuid())
-  fotoProfile String
-  dashboard   String
-  deskripsi   String
-  alamat      String
-  instagram   String?
-  facebook    String?
-  tiktok      String?
-  lokasi      String
-  contact     String
-  iklan       Json?
-  Agenda      Agenda[]
-  users       User?    @relation(fields: [userId], references: [email], onDelete: Cascade)
-  userId      String?  @map("user_id")
+  id            String   @id @default(cuid())
+  namaKomunitas String
+  fotoProfile   String?
+  dashboard     String?
+  deskripsi     String
+  alamat        String
+  instagram     String?
+  facebook      String?
+  tiktok        String?
+  lokasi        String
+  contact       String
+  iklan         Json?
+  Agenda        Agenda[]
+  users         User?    @relation(fields: [userId], references: [email], onDelete: Cascade)
+  userId        String?  @map("user_id")
+    CreateDateAt      DateTime    @default(now())
+  UpdatedAt         DateTime    @updatedAt
 }
 
 model VerificationToken {
