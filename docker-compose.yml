@@ -7,20 +7,6 @@ services:
       - password="226bca3c-d192-4fd4-a622-8da16d14b7bd"
     depends_on:
       - db
-  nginx:
-    build:
-      context: ./nginx
-    container_name: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - nestjs-app
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    networks:
-      - app-network
   db:
     image: postgres:17
     environment:
@@ -29,15 +15,6 @@ services:
       POSTGRES_DB: nestjs_postgres
     ports:
       - "5433:5433"
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    networks:
-      - app-network
 
 volumes:
   postgres-data:
