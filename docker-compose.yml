@@ -2,6 +2,8 @@ version: '3.8'
 services:
   nestjs-app:
     build: .
+    ports:
+      - '3000:3000'
     environment:
       - DATABASE_URL=postgresql://nestjs:qwerty1234@db:5432/nestjs_postgres
       - password="226bca3c-d192-4fd4-a622-8da16d14b7bd"
@@ -14,7 +16,7 @@ services:
       POSTGRES_PASSWORD: qwerty1234
       POSTGRES_DB: nestjs_postgres
     ports:
-      - "5433:5433"
+      - '5433:5433'
 
 volumes:
   postgres-data:
