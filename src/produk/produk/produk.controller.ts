@@ -7,11 +7,13 @@ import {
   Post,
   Query,
   UseFilters,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ValidationFilter } from 'src/validation/validation/validation.filter';
 import { StateProduk } from './produk.model';
 import { ProdukService } from './produk.service';
 import { Produk } from '@prisma/client';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('produk')
 export class ProdukController {
@@ -53,6 +55,7 @@ export class ProdukController {
 
   @Get('produkAll')
   @HttpCode(200)
+  @UseInterceptors(CacheInterceptor)
   @Header('Content-Type', 'application/json')
   async FindprodukAll(
     @Query('skip') skip: string,
@@ -62,6 +65,7 @@ export class ProdukController {
     return this.produk.FindprodukMany(skip, limits, harga);
   }
   @Get('findproduk/:id')
+  @UseInterceptors(CacheInterceptor)
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   async Findprodukbyid(@Query('id') id: string): Promise<any> {
@@ -69,6 +73,7 @@ export class ProdukController {
   }
 
   @Get('kategories')
+  @UseInterceptors(CacheInterceptor)
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   async Findprodukbtcat(
@@ -79,6 +84,7 @@ export class ProdukController {
     return this.produk.FindprodukbyCat(skip, limits, cat);
   }
   @Get('searchProduk')
+  @UseInterceptors(CacheInterceptor)
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   async searchProduk(

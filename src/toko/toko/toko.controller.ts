@@ -7,10 +7,12 @@ import {
   Post,
   Query,
   UseFilters,
+  UseInterceptors,
 } from '@nestjs/common';
 import { TokoService } from './toko.service';
 import { ValidationFilter } from 'src/validation/validation/validation.filter';
 import { stateToko } from './toko.model';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('toko')
 export class TokoController {
@@ -40,6 +42,7 @@ export class TokoController {
   }
 
   @Get('findToko/:id')
+  @UseInterceptors(CacheInterceptor)
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   async FindToko(@Query('id') id: string): Promise<stateToko> {
@@ -47,6 +50,7 @@ export class TokoController {
   }
 
   @Get('tokoAll')
+  @UseInterceptors(CacheInterceptor)
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   async FindTokoAll(): Promise<stateToko[]> {

@@ -7,10 +7,12 @@ import {
   Post,
   Query,
   UseFilters,
+  UseInterceptors,
 } from '@nestjs/common';
 import { TakurService } from './takur.service';
 import { ValidationFilter } from 'src/validation/validation/validation.filter';
 import { StateTakur } from './takur.model';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 @Controller('api/takur')
 export class TakurController {
   constructor(private Takur: TakurService) {}
@@ -38,6 +40,7 @@ export class TakurController {
   }
   @Get('find')
   @HttpCode(200)
+  @UseInterceptors(CacheInterceptor)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
   async findTakur(

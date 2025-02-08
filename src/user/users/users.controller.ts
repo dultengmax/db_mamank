@@ -13,16 +13,23 @@ import {
   Request,
   UseFilters,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Connection } from '../connection/connection.service';
 import { User } from '@prisma/client';
-import {  UsersService } from './users.service';
+import { UsersService } from './users.service';
 import { ValidationService } from 'src/validation/validation/validation.service';
 import { ValidationFilter } from 'src/validation/validation/validation.filter';
-import { contactusersRequest, fotoProfileRequest, PasswordRequest, RegisterUserRequest, userNameRequest } from './users.model';
+import {
+  contactusersRequest,
+  fotoProfileRequest,
+  PasswordRequest,
+  RegisterUserRequest,
+  userNameRequest,
+} from './users.model';
 import { AuthGuard } from './users.guard';
 import { Public } from '../decorator/public.decorator';
-
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('/api/users')
 export class UsersController {
@@ -31,31 +38,28 @@ export class UsersController {
     private user: UsersService,
   ) {}
 
-  
   // ini contoh method yang mengembalikan semua data user
   @Post('register')
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
   async getAllUsers(
-    @Body() Req:RegisterUserRequest,
+    @Body() Req: RegisterUserRequest,
   ): Promise<RegisterUserRequest> {
     return this.user.register(Req);
   }
 
-  // ini controller login 
+  // ini controller login
   @Public()
   @Post('login')
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
-  async Login(
-    @Body() Req:RegisterUserRequest,
-  ): Promise<{access:string}> {
+  async Login(@Body() Req: RegisterUserRequest): Promise<{ access: string }> {
     return this.user.Login(Req);
   }
 
-  // ini controller logout 
+  // ini controller logout
   @Post('logout')
   @UseGuards(AuthGuard)
   async Logout(@Request() req) {
@@ -67,9 +71,7 @@ export class UsersController {
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
-  async foto(
-    @Body() Req:fotoProfileRequest,
-  ): Promise<User> {
+  async foto(@Body() Req: fotoProfileRequest): Promise<User> {
     return this.user.fotoprofile(Req);
   }
 
@@ -78,9 +80,7 @@ export class UsersController {
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
-  async Username(
-    @Body() Req:userNameRequest,
-  ): Promise<User> {
+  async Username(@Body() Req: userNameRequest): Promise<User> {
     return this.user.editUserName(Req);
   }
 
@@ -89,53 +89,44 @@ export class UsersController {
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
-  async pass(
-    @Body() Req:PasswordRequest,
-  ): Promise<PasswordRequest> {
+  async pass(@Body() Req: PasswordRequest): Promise<PasswordRequest> {
     return this.user.editPassword(Req);
   }
 
-    // ini controller untuk menambahkan/mengedit contact
+  // ini controller untuk menambahkan/mengedit contact
 
   @Post('editContact')
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
   async contact(
-    @Body() Req:contactusersRequest,
+    @Body() Req: contactusersRequest,
   ): Promise<contactusersRequest> {
     return this.user.contactUser(Req);
   }
 
- //ini controllers untuk menampilkan data users
+  //ini controllers untuk menampilkan data users
 
- @Get('/find')
- @HttpCode(200)
- @Header('Content-Type', 'application/json')
- @UseFilters(ValidationFilter)
- FindUsers(
-   @Query('id') id: string,
- ): Promise<User> {
-   return this.user.FindUser(id);
- }
- //ini controllers untuk menampilkan data users
+  @Get('/find')
+  @HttpCode(200)
+  @UseInterceptors(CacheInterceptor)
+  @Header('Content-Type', 'application/json')
+  @UseFilters(ValidationFilter)
+  FindUsers(@Query('id') id: string): Promise<User> {
+    return this.user.FindUser(id);
+  }
+  //ini controllers untuk menampilkan data users
 
- @Get('/all')
- @HttpCode(200)
- @Header('Content-Type', 'application/json')
- @UseFilters(ValidationFilter)
- Finds(): Promise<User[]> {
-   return this.user.FindUserMany();
- }
+  @Get('/all')
+  @HttpCode(200)
+  @UseInterceptors(CacheInterceptor)
+  @Header('Content-Type', 'application/json')
+  @UseFilters(ValidationFilter)
+  Finds(): Promise<User[]> {
+    return this.user.FindUserMany();
+  }
 
-// /=======================================================////
-
-
-
-
-
-
-
+  // /=======================================================////
 
   @Get('/konek')
   getConnectionName(): string {
@@ -143,7 +134,7 @@ export class UsersController {
   }
 
   // ini contoh method redirect
-@UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   @Get('/ddr')
   @Redirect()
   redirects(): HttpRedirectResponse {
@@ -173,7 +164,7 @@ export class UsersController {
     @Query('name') name: string,
     @Query('email') email: string,
     @Query('greet') greet: string,
-): Promise<string> {
+  ): Promise<string> {
     return `brooo ${name} ${email} ${greet}`;
   }
 }

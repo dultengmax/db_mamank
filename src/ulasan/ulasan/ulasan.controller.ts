@@ -7,10 +7,12 @@ import {
   Post,
   Query,
   UseFilters,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ValidationFilter } from 'src/validation/validation/validation.filter';
 import { UlasanService } from './ulasan.service';
 import { StateUlasan } from './ulasan.model';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('ulasan')
 export class UlasanController {
@@ -48,6 +50,7 @@ export class UlasanController {
   }
 
   @Get('findulasan')
+  @UseInterceptors(CacheInterceptor)
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   async Findulasan(@Query('id') id: string): Promise<StateUlasan[]> {

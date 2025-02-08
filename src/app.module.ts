@@ -26,6 +26,7 @@ import { ComunityModule } from './comunity/comunity.module';
 import { TakurModule } from './takur/takur.module';
 import { ComunityController } from './comunity/src/src.controller';
 import { ComunityService } from './comunity/src/src.service';
+import { CacheModule } from '@nestjs/cache-manager';
 @Module({
   imports: [
     WinstonModule.forRoot({
@@ -52,6 +53,11 @@ import { ComunityService } from './comunity/src/src.service';
     UlasanModule,
     ComunityModule,
     TakurModule,
+    CacheModule.register({
+      ttl: 60 * 60, // 1 hour
+      max: 100, // maximum number of items in cache
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController, ComunityController],
   providers: [

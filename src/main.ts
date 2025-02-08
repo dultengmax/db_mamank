@@ -8,6 +8,7 @@ import * as session from 'express-session';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const loggerServises = app.get(WINSTON_MODULE_NEST_PROVIDER);
+  app.enableCors();
   app.useLogger(loggerServises)
   app.use(
     session({
