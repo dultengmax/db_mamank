@@ -12,21 +12,14 @@ import * as winston from 'winston';
 import { LogMiddleware } from './log/log.middleware';
 import { TokoModule } from './toko/toko.module';
 import { TokoService } from './toko/toko/toko.service';
-import { LowonganModule } from './lowongan/lowongan.module';
-import { LowonganService } from './lowongan/lowongan/lowongan.service';
-import { AgendaModule } from './agenda/agenda.module';
-import { AgendaService } from './agenda/agenda/agenda.service';
+
 import { ProdukModule } from './produk/produk.module';
 import { NotificationModule } from './notification/notification.module';
-import { LaporanModule } from './laporan/laporan.module';
 import { PaymentModule } from './payment/payment.module';
 import { ProdukService } from './produk/produk/produk.service';
-import { UlasanModule } from './ulasan/ulasan.module';
-import { ComunityModule } from './comunity/comunity.module';
-import { TakurModule } from './takur/takur.module';
-import { ComunityController } from './comunity/src/src.controller';
-import { ComunityService } from './comunity/src/src.service';
+
 import { CacheModule } from '@nestjs/cache-manager';
+import { TravelModule } from './travel/travel.module';
 @Module({
   imports: [
     WinstonModule.forRoot({
@@ -44,31 +37,24 @@ import { CacheModule } from '@nestjs/cache-manager';
     PrismaModule,
     ValidationModule.forRoot(true),
     TokoModule,
-    LowonganModule,
-    AgendaModule,
     ProdukModule,
     NotificationModule,
-    LaporanModule,
     PaymentModule,
-    UlasanModule,
-    ComunityModule,
-    TakurModule,
     CacheModule.register({
       ttl: 60 * 60, // 1 hour
       max: 100, // maximum number of items in cache
       isGlobal: true,
     }),
+    TravelModule,
   ],
-  controllers: [AppController, ComunityController],
+  controllers: [AppController],
   providers: [
     AppService,
     PrismaService,
     UsersService,
     TokoService,
-    LowonganService,
-    AgendaService,
+
     ProdukService,
-    ComunityService,
   ],
 })
 export class AppModule implements NestModule {

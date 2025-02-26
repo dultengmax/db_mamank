@@ -13,7 +13,7 @@ describe('UsersController', () => {
   });
 
   it('should be defined', async () => {
-    const data = await controller.llo('dsdsds');
+    const data = await controller.FindUsers('dsdsds');
     expect(data).toBe('brooo dsdsds');
   });
 });

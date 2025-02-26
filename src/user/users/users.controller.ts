@@ -55,7 +55,7 @@ export class UsersController {
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
-  async Login(@Body() Req: RegisterUserRequest): Promise<{ access: string }> {
+  async Login(@Body() Req: RegisterUserRequest): Promise<{access:string,user:any}> {
     return this.user.Login(Req);
   }
 
@@ -64,15 +64,6 @@ export class UsersController {
   @UseGuards(AuthGuard)
   async Logout(@Request() req) {
     return req.logout();
-  }
-
-  // ini controller untuk menambahkan/mengedit fotoprofile
-  @Post('fotoProfile')
-  @HttpCode(200)
-  @Header('Content-Type', 'application/json')
-  @UseFilters(ValidationFilter)
-  async foto(@Body() Req: fotoProfileRequest): Promise<User> {
-    return this.user.fotoprofile(Req);
   }
 
   // ini controller untuk menambahkan/mengedit username
@@ -128,43 +119,4 @@ export class UsersController {
 
   // /=======================================================////
 
-  @Get('/konek')
-  getConnectionName(): string {
-    return this.connection.getName();
-  }
-
-  // ini contoh method redirect
-  @UseGuards(AuthGuard)
-  @Get('/ddr')
-  @Redirect()
-  redirects(): HttpRedirectResponse {
-    return {
-      statusCode: 302,
-      url: 'https://example.com',
-    };
-  }
-
-  //   ini murni pake response nest js
-  @Get('/sasa')
-  @Header('Content-Type', 'application/json')
-  @HttpCode(200)
-  sampelresponse(): Record<string, string> {
-    return {
-      data: 'dadadadadadad',
-    };
-  }
-
-  //   ini untuk ng request menggunakan express method dan mengambil id
-  //   @Get('/:id')
-  //   getUserById(@Req() request:Request):string {
-  //     return `${request.params.id}`;
-  //   }
-  @Get('/helli')
-  async llo(
-    @Query('name') name: string,
-    @Query('email') email: string,
-    @Query('greet') greet: string,
-  ): Promise<string> {
-    return `brooo ${name} ${email} ${greet}`;
-  }
 }

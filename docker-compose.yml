@@ -3,23 +3,26 @@ services:
   nestjs-app:
     build: .
     ports:
-      - '3000:3000'
+      - '3001:3001'
+    volumes:
+      - uploads:/app/uploads
     environment:
-      - DATABASE_URL=postgresql://nestjs:qwerty1234@db:5432/nestjs_postgres
+      - DATABASE_URL=postgresql://nestjs2:mamank_travel1234@db:5434/mamank_travel
       - password="226bca3c-d192-4fd4-a622-8da16d14b7bd"
     depends_on:
       - db
   db:
     image: postgres:17
     environment:
-      POSTGRES_USER: nestjs
-      POSTGRES_PASSWORD: qwerty1234
-      POSTGRES_DB: nestjs_postgres
+      POSTGRES_USER: nestjs2
+      POSTGRES_PASSWORD: mamank_travel1234
+      POSTGRES_DB: mamank_travel
     ports:
-      - '5433:5433'
+      - '5434:5434'
 
 volumes:
   postgres-data:
+  uploads:
 
 networks:
   app-network:

@@ -1,17 +1,17 @@
-export class StateProduk {
-  detailProduk: string;
-  hargaProduk: string;
-  variantProduk: string[];
-  hargavariant: string[];
-  fotoProduk: string[];
-  video: string[];
-  Stok: string;
-  catProduk: string;
-  volume: string;
+export class StatePaket {
+  isipaket: string;
+  from: string;
+  to: string;
   berat: string;
-  JenisProduk: string;
-  Lokasi: string;
-  diskon: string;
-  tokoId: string;
-  PesananId: string;
+  volume: string;
+  jenisPaket: string;
+  cityf: string;
+  cityt: string;
+  jadwal: string;
+  pay: string;
+  jam: string;
+  nomorPengirim: string;
+  nomorPenerima: string;
+  harga: string;
+  fotoPaket: string;
 }

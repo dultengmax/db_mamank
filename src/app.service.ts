@@ -12,7 +12,6 @@ export class AppService {
   async getCachekey(key: string): Promise<any> {
     return this.cacheManager.get(key);
   }
-
   async delCachekey(key: string): Promise<void> {
     await this.cacheManager.del(key);
   }

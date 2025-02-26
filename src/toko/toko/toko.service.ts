@@ -1,8 +1,9 @@
 import { Injectable, HttpException } from '@nestjs/common';
 import { ValidationService } from 'src/validation/validation/validation.service';
-import { stateToko } from './toko.model';
-import { UserSchemaToko } from './toko.validation';
+import { stateCarousel, stateToko } from './toko.model';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
+import { Rute } from '@prisma/client';
+import { UserSchemaRute } from './toko.validation';
 
 @Injectable()
 export class TokoService {
@@ -11,43 +12,35 @@ export class TokoService {
     private validate: ValidationService,
   ) {}
 
-  async CreateToko(data: stateToko, id: string): Promise<stateToko> {
-    const result = await this.validate.validate(UserSchemaToko, data);
+  async CreateRute(data: stateToko, id: string): Promise<Rute> {
+    const result = await this.validate.validate(UserSchemaRute, data);
     const users = await this.prisma.user.findUnique({
       where: {
         email: id,
+        role: 'admin',
       },
     });
     if (!users) {
       throw new HttpException('User not found', 404);
     }
-    const toko = await this.prisma.toko.create({
+    const toko = await this.prisma.rute.create({
       data: {
-        namaToko: result.namaToko,
-        deskripsi: result.deskripsi,
-        katagories: result.katagories,
-        kota: result.kota,
-        provinsi: result.provinsi,
+        From: result.From,
+        to: result.to,
         alamat: result.alamat,
-        nomorContact: result.nomorContact,
         jadwal: result.jadwal,
         jamOprasional: result.jamOprasional,
-        Latitude: result.Latitude,
-        Kecamatan: result.kecamatan,
-        Kelurahan: result.kelurahan,
-        Longitude: result.longitude,
         AuthorId: users.email,
       },
     });
 
     const notification = await this.prisma.notifikasi.create({
       data: {
-        judulPesan: `selamat toko anda bernama ${result.namaToko} berhasil dibuat`,
-        StatusPesan: `toko berhasil dibuat pada ${toko.CreateDateAt}`,
+        judulPesan: `selamat rute dari ${result.From} sampai ${result.to}`,
+        StatusPesan: `rute berhasil dibuat pada ${toko.CreateDateAt}`,
         keterangan: 'bismillah semoga lancar usahanya  ',
         statusNotiv: 'toko berhasil dibuat',
         NotivId: users.email,
-        NotivTokoId: toko.id,
       },
     });
     if (!notification.statusNotiv) {
@@ -56,65 +49,38 @@ export class TokoService {
     return toko;
   }
 
-  async UpdateToko(
-    data: stateToko,
-    email: string,
-    id: string,
-  ): Promise<stateToko> {
-    const result = await this.validate.validate(UserSchemaToko, data);
-    const users = await this.prisma.user.findUnique({
+  async UpdateRute(data: stateToko, email: string, id: string): Promise<Rute> {
+    const result = await this.validate.validate(UserSchemaRute, data);
+    const users = await this.prisma.user.findMany({
       where: {
-        email: email,
+        role: 'admin',
       },
     });
     if (!users) {
       throw new HttpException('User not found', 404);
     }
-    const toko = await this.prisma.toko.updateMany({
+    const toko = await this.prisma.rute.updateMany({
       where: {
         id: id,
-        AuthorId: users.email,
       },
       data: {
-        namaToko: result.namaToko,
-        deskripsi: result.deskripsi,
-        katagories: result.katagories,
-        kota: result.kota,
-        provinsi: result.provinsi,
+        From: result.From,
+        to: result.to,
         alamat: result.alamat,
-        nomorContact: result.nomorContact,
         jadwal: result.jadwal,
         jamOprasional: result.jamOprasional,
-        Latitude: result.Latitude,
-        Kecamatan: result.kecamatan,
-        Kelurahan: result.kelurahan,
-        Longitude: result.longitude,
       },
     });
 
     if (!toko.count) {
       throw new HttpException('User not found', 404);
     }
-    const notification = await this.prisma.notifikasi.updateMany({
-      where: {
-        NotivId: users.email,
-        NotivTokoId: id,
-      },
-      data: {
-        judulPesan: 'toko anda berhasil di update',
-        StatusPesan: `update berhasil pada ${new Date()}`,
-        keterangan: 'toko baru saja di update',
-        statusNotiv: 'toko berhasil dibuat',
-      },
-    });
-    if (!notification[0].statusNotiv) {
-      throw new HttpException('User not found', 404);
-    }
+
     return toko[0];
   }
-  async FindToko(id: string): Promise<stateToko> {
+  async FindRute(id: string): Promise<stateToko> {
     try {
-      const toko = await this.prisma.toko.findUnique({
+      const toko = await this.prisma.rute.findUnique({
         where: {
           id: id,
         },
@@ -125,9 +91,9 @@ export class TokoService {
       throw new HttpException('User not found', 404);
     }
   }
-  async FindTokoMany(): Promise<stateToko[]> {
+  async FindRuteMany(): Promise<stateToko[]> {
     try {
-      const toko = await this.prisma.toko.findMany({
+      const toko = await this.prisma.rute.findMany({
         orderBy: {
           CreateDateAt: 'desc',
         },
@@ -138,26 +104,14 @@ export class TokoService {
       throw new HttpException('User not found', 404);
     }
   }
-  async FindTokobycatagories(cat: string): Promise<stateToko[]> {
-    try {
-      const toko = await this.prisma.toko.findMany({
-        where: {
-          katagories: cat,
-        },
-      });
-      return toko;
-    } catch (error) {
-      console.log(error);
-      throw new HttpException('User not found', 404);
-    }
-  }
+
   async FindTokoSearch(name: string): Promise<stateToko[]> {
     try {
       if (name == null || name == '')
         throw new HttpException('tidak ada pencarian', 405);
-      const toko = await this.prisma.toko.findMany({
+      const toko = await this.prisma.rute.findMany({
         where: {
-          namaToko: {
+          From: {
             contains: name,
           },
         },
@@ -169,11 +123,11 @@ export class TokoService {
     }
   }
 
-  async FindTokobyInternal(cat: string): Promise<stateToko[]> {
+  async addCarousel(data: string): Promise<stateCarousel> {
     try {
-      const toko = await this.prisma.toko.findMany({
-        where: {
-          katagories: cat,
+      const toko = await this.prisma.carousel.create({
+        data: {
+          carousel: data,
         },
       });
       return toko;

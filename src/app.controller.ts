@@ -9,9 +9,4 @@ export class AppController {
   findAll(@Session() session: Record<string, any>) {
     console.log(session.id);
   }
-
-  @Get('/application')
-  getHelo(): string {
-    return this.appService.getHello();
-  }
 }

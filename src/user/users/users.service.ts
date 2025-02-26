@@ -7,7 +7,6 @@ import { z } from 'zod';
 import * as bcrypt from 'bcrypt';
 import {
   contactusersRequest,
-  fotoProfileRequest,
   PasswordRequest,
   RegisterUserRequest,
   userNameRequest,
@@ -48,7 +47,7 @@ export class UsersService {
 
     return users;
   }
-  async Login(login: RegisterUserRequest): Promise<{access:string}> {
+  async Login(login: RegisterUserRequest): Promise<{access:string,user:any}> {
     const FormSchema = z.object({
       email: z
         .string()
@@ -77,28 +76,11 @@ export class UsersService {
     
     const payload = { sub: user.id, username: user.userName };
 
-    return {access: await this.jwtService.signAsync(payload),};
+    return {access: await this.jwtService.signAsync(payload),
+            user: user,
+    };
   }
-  async fotoprofile(foto: fotoProfileRequest): Promise<User> {
-    const users = await this.PrismaService.user.findUnique({
-      where: {
-        email: foto.email,
-      },
-    });
 
-    if (!users) {
-      throw new HttpException('User not found', 404);
-    }
-    const addFoto = await this.PrismaService.user.update({
-      where: {
-        email: users.email,
-      },
-      data: {
-        image: foto.image,
-      },
-    });
-    return addFoto;
-  }
   async editUserName(user: userNameRequest): Promise<User> {
     const data = await this.PrismaService.user.findUnique({
       where: {

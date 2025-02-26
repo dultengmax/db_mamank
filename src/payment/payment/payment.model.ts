@@ -10,3 +10,40 @@ export class StatePayment {
   kategori: string;
   url: string;
 }
+
+export class StateTravel {
+  from: string;
+  to: string;
+  mapfrom: string;
+  mapto: string;
+  cityf: string;
+  cityt: string;
+  jadwal: string;
+  pay: string;
+  jam: string;
+  image: string;
+  status: string;
+  namaPenumpang: string;
+  jenisTraveller: string;
+  volume: string;
+  nomorPengirim: string;
+  harga: string;
+}
+
+export class StatePaket {
+  isipaket: string;
+  from: string;
+  to: string;
+  berat: string;
+  volume: string;
+  jenisPaket: string;
+  cityf: string;
+  cityt: string;
+  jadwal: string;
+  pay: string;
+  jam: string;
+  nomorPengirim: string;
+  nomorPenerima: string;
+  harga: string;
+  fotoPaket: string;
+}

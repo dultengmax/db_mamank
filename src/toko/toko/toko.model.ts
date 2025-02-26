@@ -1,15 +1,16 @@
 export class stateToko {
-  namaToko: string | undefined;
-  deskripsi: string | undefined;
-  katagories: string | undefined;
-  kota: string | undefined;
-  provinsi: string | undefined;
-  alamat: string | undefined;
-  nomorContact: string | undefined;
-  jadwal: string | undefined;
-  jamOprasional: string | undefined;
-  Latitude: string | undefined;
-  AuthorId: string | undefined;
+  From: string;
+  to: string;
+  image: string;
+  provinsi: string;
+  kota: string;
+  Kecamatan: string;
+  Kelurahan: string;
+  alamat: string;
+  Latitude: string;
+  Longitude: string;
+  jadwal: string;
+  jamOprasional: string;
 }
 
 export class stateNotif {
@@ -19,4 +20,9 @@ export class stateNotif {
   statusNotiv: string;
   NotivId: string;
   NotivTokoId: string;
+}
+
+export class stateCarousel {
+  carousel: any;
+  promo: any;
 }

@@ -2,8 +2,8 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { ValidationService } from 'src/validation/validation/validation.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { UserscemaProduk } from './produk.validation';
-import { StateProduk } from './produk.model';
-import { Produk } from '@prisma/client';
+import { Paket } from '@prisma/client';
+import { StatePaket } from './produk.model';
 
 @Injectable()
 export class ProdukService {
@@ -12,41 +12,44 @@ export class ProdukService {
     private validate: ValidationService,
   ) {}
 
-  async CreateProduk(data: StateProduk, id: string): Promise<Produk> {
+  async CreatePaket(data: StatePaket, id: string): Promise<Paket> {
     const result = await this.validate.validate(UserscemaProduk, data);
-    const toko = await this.prisma.toko.findMany({
+    const user = await this.prisma.user.findMany({
       where: {
-        AuthorId: id,
+        id: id,
       },
     });
-    if (!toko) {
+    if (!user) {
       throw new HttpException('User not found', 404);
     }
-    const produk = await this.prisma.produk.create({
+    const produk = await this.prisma.paket.create({
       data: {
-        namaProduk: result.namaProduk,
-        detailProduk: result.detailProduk,
-        catProduk: result.catProduk,
-        hargaProduk: result.HargaProduk,
-        JenisProduk: result.jenisProduk,
+        isipaket: result.isipaket,
+        from: result.from,
+        to: result.to,
         berat: result.berat,
         volume: result.volume,
-        fotoProduk: result.fotoProduk,
-        diskon: result.diskon,
-        Lokasi: result.Lokasi,
-        variantProduk: result.VariantProduk,
-        video: result.video,
-        hargavariant: result.hargavariant,
-        PesananId: result.pesananId,
+        jenisPaket: result.jenisPaket,
+        nomorPengirim: result.nomorPengirim,
+        nomorPenerima: result.nomorPenerima,
+        harga: result.harga,
+        fotoPaket: result.fotoPaket,
+        fotoPenerima: result.fotoPenerima,
+        cityf: data.cityf,
+        cityt: data.cityt,
+        jadwal: data.jadwal,
+        pay: data.pay,
+        jam: data.jam,
+        namaPenerima: 'pending',
+        namaPengirim: 'pending',
       },
     });
     const notification = await this.prisma.notifikasi.create({
       data: {
-        judulPesan: `selamat produk anda ${produk.namaProduk} berhasil dibuat`,
+        judulPesan: `selamat paket anda ${produk.isipaket} berhasil dikirim ke ${produk.to}`,
         StatusPesan: 'berhasil diupdate',
         keterangan: 'String',
         statusNotiv: 'create',
-        NotivTokoId: id,
       },
     });
     if (!notification[0].statusNotiv) {
@@ -54,52 +57,45 @@ export class ProdukService {
     }
     return produk;
   }
-  async UpdateProduk(
-    data: StateProduk,
+  async UpdatePaket(
+    data: StatePaket,
     id: string,
     email: string,
-  ): Promise<Produk> {
+  ): Promise<Paket> {
     const result = await this.validate.validate(UserscemaProduk, data);
-    const toko = await this.prisma.toko.findMany({
+    const user = await this.prisma.user.findMany({
       where: {
-        AuthorId: email,
+        email: email,
       },
     });
-    if (!toko) {
+    if (!user) {
       throw new HttpException('User not found', 404);
     }
-    const produk = await this.prisma.produk.update({
+    const produk = await this.prisma.paket.update({
       where: {
         id: id,
       },
       data: {
-        namaProduk: result.namaProduk,
-        detailProduk: result.detailProduk,
-        catProduk: result.catProduk,
-        hargaProduk: result.HargaProduk,
-        JenisProduk: result.jenisProduk,
+        isipaket: result.isipaket,
+        from: result.from,
+        to: result.to,
         berat: result.berat,
         volume: result.volume,
-        fotoProduk: result.fotoProduk,
-        diskon: result.diskon,
-        Lokasi: result.Lokasi,
-        variantProduk: result.VariantProduk,
-        video: result.video,
-        hargavariant: result.hargavariant,
-        PesananId: result.pesananId,
+        jenisPaket: result.jenisPaket,
+        nomorPengirim: result.nomorPengirim,
+        nomorPenerima: result.nomorPenerima,
+        harga: result.harga,
+        fotoPaket: result.fotoPaket,
+        fotoPenerima: result.fotoPenerima,
       },
     });
 
     const notification = await this.prisma.notifikasi.updateMany({
-      where: {
-        NotivTokoId: id,
-      },
       data: {
-        judulPesan: `selamat produk anda ${produk.namaProduk} berhasil di update`,
+        judulPesan: `selamat produk anda ${produk.from} berhasil di update`,
         StatusPesan: 'berhasil diupdate',
         keterangan: 'String',
         statusNotiv: 'update',
-        NotivTokoId: id,
       },
     });
     if (!notification[0].statusNotiv) {
@@ -108,94 +104,27 @@ export class ProdukService {
 
     return produk;
   }
-  async DeleteProduk(id: string) {
+  async DeletePaket(id: string) {
     try {
-      const produk = await this.prisma.produk.delete({
+      const produk = await this.prisma.paket.delete({
         where: {
           id: id,
         },
       });
 
-      const notification = await this.prisma.notifikasi.updateMany({
-        where: {
-          NotivTokoId: id,
-        },
-        data: {
-          judulPesan: `selamat produk anda ${produk.namaProduk} berhasil di hapus`,
-          StatusPesan: 'berhasil dihapus',
-          keterangan: 'String',
-          statusNotiv: 'delete',
-          NotivTokoId: id,
-        },
-      });
-      if (!notification[0].statusNotiv) {
-        throw new HttpException('User not found', 404);
-      }
       return produk;
     } catch (error) {
       console.log(error);
       throw new HttpException('User not found', 404);
     }
   }
-  async Findproduk(id: string) {
+  async FindPaket(id: string) {
     try {
-      const produk = await this.prisma.produk.findUnique({
+      const produk = await this.prisma.paket.findUnique({
         where: {
           id: id,
         },
       });
-      return produk;
-    } catch (error) {
-      console.log(error);
-      throw new HttpException('User not found', 404);
-    }
-  }
-  async FindprodukMany(skip: string, limits: string, harga: string) {
-    try {
-      const produk = await this.prisma.produk.findMany({
-        where: {
-          hargaProduk: harga,
-        },
-        skip: parseInt(skip),
-        take: parseInt(limits),
-      });
-      return produk;
-    } catch (error) {
-      console.log(error);
-      throw new HttpException('User not found', 404);
-    }
-  }
-  async FindprodukbyCat(cat: string, skip: string, limits: string) {
-    try {
-      const produk = await this.prisma.produk.findMany({
-        where: {
-          JenisProduk: cat,
-        },
-        skip: parseInt(skip),
-        take: parseInt(limits),
-      });
-      return produk;
-    } catch (error) {
-      console.log(error);
-      throw new HttpException('User not found', 404);
-    }
-  }
-  async SearchProduk(name: string, skip: string, limits: string) {
-    try {
-      if (name === undefined || name === '') {
-        throw new HttpException('Name not found', 404);
-      }
-      const produk = await this.prisma.produk.findMany({
-        where: {
-          namaProduk: { contains: name },
-        },
-        skip: parseInt(skip),
-        take: parseInt(limits),
-        orderBy: {
-          CreateDateAt: 'desc',
-        },
-      });
-
       return produk;
     } catch (error) {
       console.log(error);

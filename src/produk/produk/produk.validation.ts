@@ -1,45 +1,41 @@
 import { z } from 'zod';
 
 export const UserscemaProduk = z.object({
-  namaProduk: z
+  isipaket: z
     .string()
     .min(1, {
-      message: 'nama toko harus di isi',
+      message: 'isi paket harus jelas',
     })
-    .max(20, { message: 'tidak boleh lebih dari 25 huruf' }),
-  HargaProduk: z.string().min(14, {
+    .max(300, { message: 'tidak boleh lebih dari 25 huruf' }),
+  harga: z.string().min(1, {
     message: 'harga harus lengkap ',
   }),
-  VariantProduk: z.string().array().optional(),
-  hargavariant: z.string().array().optional(),
-  fotoProduk: z.string().array().optional(),
   volume: z.string().min(1, {
-    message: 'kelurahan harus di isi',
+    message: 'volume harus di isi',
   }),
   berat: z.string().min(1, {
-    message: 'katagori harus di isi',
+    message: 'berat harus di isi',
   }),
-  video: z.string().array().optional(),
-  catProduk: z.string().min(1, {
-    message: 'garis lintang harus di isi',
+  to: z.string().min(5, {
+    message: 'tujuan harus di isi',
   }),
-  tokoId: z.string().min(1, {
-    message: 'garis bujur harus di isi',
+  from: z.string().min(5, {
+    message: 'penjemputan harus di isi',
   }),
-  pesananId: z.string().min(1, {
-    message: 'garis bujur harus di isi',
+  jenisPaket: z.string().min(1, {
+    message: 'jenis paket harus di isi',
   }),
-  Lokasi: z.string().min(1, {
-    message: 'no contact harus di isi',
+  nomorPengirim: z.string().min(2, {
+    message: 'no pengirim harus di isi',
   }),
-  diskon: z.string().min(1, {
-    message: 'no contact harus di isi',
-  }),
-  detailProduk: z.string().min(50, {
-    message: 'deskripsi produk harus di isi minimal 20 kata',
+  nomorPenerima: z.string().min(2, {
+    message: 'nomor penerima ',
   }),
 
-  jenisProduk: z.string().min(10, {
-    message: '  jam oprasional harus di isi',
+  fotoPaket: z.string().min(10, {
+    message: 'foto paket harus di isi',
+  }),
+  fotoPenerima: z.string().min(10, {
+    message: 'foto paket harus di isi',
   }),
 });

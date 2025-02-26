@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Snap } from 'midtrans-client';
-import { StatePayment } from './payment.model';
+import { StatePaket, StateTravel } from './payment.model';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
+import { UserscemaProduk } from 'src/produk/produk/produk.validation';
+import { ValidationService } from 'src/validation/validation/validation.service';
 
 @Injectable()
 export class PaymentService {
   private snap: Snap;
   private prisma: PrismaService;
-
+  private validate: ValidationService;
   constructor() {
     this.snap = new Snap({
       isProduction: false, // Set true untuk mode production
@@ -15,7 +17,7 @@ export class PaymentService {
     });
   }
 
-  async addPayment(data: StatePayment, userId: string) {
+  async addPaymentTravel(data: StateTravel, userId: string) {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -24,24 +26,124 @@ export class PaymentService {
       });
 
       if (!user) {
-        throw new Error('User not found');
+        throw new Error('User not found broo');
       }
+
+      const toko = await this.prisma.travel.create({
+        data: {
+          from: data.from,
+          to: data.to,
+          mapfrom: data.mapfrom,
+          mapto: data.mapto,
+          image: data.image,
+          status: data.status,
+          namaPenumpang: data.namaPenumpang,
+          jenisTravel: data.jenisTraveller,
+          nomorPengirim: data.nomorPengirim,
+          harga: data.harga,
+          cityf: data.cityf,
+          cityt: data.cityt,
+          jadwal: data.jadwal,
+          pay: data.pay,
+          jam: data.jam,
+        },
+      });
 
       const parameter = {
         transaction_details: {
-          order_id: data.order_id,
-          gross_amount: data.gross_amount,
+          order_id: toko.id,
+          gross_amount: toko.harga,
         },
         item_details: [
           {
-            id: data.item_id,
-            price: data.price,
-            quantity: data.quantity,
-            name: data.nameProduk,
-            brand: data.toko,
-            category: data.catProduk,
-            merchant_name: data.catProduk,
-            url: data.url,
+            id: toko.id,
+            price: toko.harga,
+            quantity: 1,
+            name: toko.jenisTravel,
+            brand: 'mamank travel',
+            category: toko.jenisTravel,
+            merchant_name: 'mamank travel',
+            url: 'http://www.mamanktravel.id',
+          },
+        ],
+        customer_details: {
+          first_name: user.name,
+          email: user.email,
+          phone: user.contact,
+          billing_address: {
+            first_name: user.name,
+            email: user.email,
+            phone: user.contact,
+            address: user.address,
+            city: user.kota,
+            country_code: 'IDN',
+          },
+        },
+      };
+
+      const transaction = await this.snap.createTransaction(parameter);
+      if (transaction.status === 200) {
+      }
+      return {
+        token: transaction.token,
+        redirect_url: transaction.redirect_url,
+      };
+    } catch (error) {
+      throw new Error(`Failed to create transaction: ${error.message}`);
+    }
+  }
+  async addPaymentPiket(data: StatePaket, userId: string) {
+    const result = await this.validate.validate(UserscemaProduk, data);
+
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          email: userId,
+        },
+      });
+
+      if (!user) {
+        throw new Error('User not found broo');
+      }
+
+      const toko = await this.prisma.paket.create({
+        data: {
+          isipaket: result.isipaket,
+          from: result.from,
+          to: result.to,
+          berat: result.berat,
+          volume: result.volume,
+          jenisPaket: result.jenisPaket,
+          nomorPengirim: result.nomorPengirim,
+          nomorPenerima: result.nomorPenerima,
+          harga: result.harga,
+          fotoPaket: result.fotoPaket,
+          fotoPenerima: result.fotoPenerima,
+          cityf: data.cityf,
+          cityt: data.cityt,
+          jadwal: data.jadwal,
+          pay: data.pay,
+          jam: data.jam,
+          namaPenerima: 'pending',
+          namaPengirim: 'pending',
+        },
+      });
+
+      const parameter = {
+        transaction_details: {
+          order_id: toko.id,
+          gross_amount: toko.harga,
+        },
+        item_details: [
+          {
+            id: toko.id,
+            price: toko.harga,
+            quantity: 1,
+            name: toko.isipaket,
+            brand: 'mamank travel',
+            category: toko.isipaket,
+            merchant_name: 'mamank travel',
+            url: 'http://www.mamanktravel.id',
           },
         ],
         customer_details: {

@@ -59,245 +59,148 @@ model User {
   role          String?
   pencarian     Json?
   Status        String?
-  laporan       Laporan[]
   accounts      Account[]
   sessions      Session[]
-  tokos         Toko[]
-  lowongans     Lowongan[]
   pesanan       Pesanan[]
   notifikasi    Notifikasi[]
   agenda        Agenda[]
-  QuickChat     QuickChat[]
   userName      String?      @unique
   password      String?
   CreateDateAt  DateTime     @default(now())
   UpdatedAt     DateTime     @updatedAt
-
-  Komunitas    Komunitas[]
-  UlasanProduk UlasanProduk[]
-  Takur        Takur[]
-}
-
-model Takur {
-  id           String      @id @default(cuid())
-  User         User?       @relation(fields: [UserId], references: [email])
-  UserId       String?
-  transaksi    String?
-  status       String?
-  hewan        Json?
-  Class        Json?
-  riwayat      Json?
-  notiv        Notifikasi? @relation(fields: [notivId], references: [id])
-  notivId      String?
-  CreateDateAt DateTime    @default(now())
-  UpdatedAt    DateTime    @updatedAt
+  Paket         Paket[]
+  Rute          Rute[]
+  travel        travel[]
+  Carousel      Carousel[]
+  Testimony     Testimony[]
 }
 
 model Pesanan {
   id           String      @id @default(cuid())
   nomorPesanan String
   status       String
+  jenispesanan String
+  harga        String
   pesan        User?       @relation(fields: [PesanId], references: [email])
   PesanId      String?
   notiv        Notifikasi? @relation(fields: [notivId], references: [id])
   notivId      String?
-  produk       Produk[]
+  paket        Paket?      @relation(fields: [paketId], references: [id])
+  paketId      String?
   CreateDateAt DateTime    @default(now())
   UpdatedAt    DateTime    @updatedAt
+  travel       travel?     @relation(fields: [travelId], references: [id])
+  travelId     String?
+}
+
+model Carousel {
+  id           String   @id @default(cuid())
+  carousel     Json?
+  promo        Json?
+  author       User?    @relation(fields: [AuthorId], references: [email])
+  AuthorId     String?
+  CreateDateAt DateTime @default(now())
+  UpdatedAt    DateTime @updatedAt
+}
+
+model Testimony {
+  id           String   @id @default(cuid())
+  name         String?
+  pengalaman   String?
+  star         String
+  author       User?    @relation(fields: [AuthorId], references: [email])
+  AuthorId     String?
+  CreateDateAt DateTime @default(now())
+  UpdatedAt    DateTime @updatedAt
 }
 
 model Notifikasi {
-  id           String       @id @default(cuid())
+  id           String    @id @default(cuid())
   judulPesan   String
   StatusPesan  String
   keterangan   String
   statusNotiv  String
-  Notiv        User?        @relation(fields: [NotivId], references: [email])
+  Notiv        User?     @relation(fields: [NotivId], references: [email])
   NotivId      String?
-  NotivToko    Toko?        @relation(fields: [NotivTokoId], references: [id])
-  NotivTokoId  String?
   pesanan      Pesanan[]
-  PesananMHQ   PesananMhq[]
   agendas      Agenda[]
-  CreateDateAt DateTime     @default(now())
-  UpdatedAt    DateTime     @updatedAt
-  Takur        Takur[]
+  CreateDateAt DateTime  @default(now())
+  UpdatedAt    DateTime  @updatedAt
+  Rute         Rute?     @relation(fields: [ruteId], references: [id])
+  ruteId       String?
 }
 
-model Toko {
-  id            String       @id @default(cuid())
-  namaToko      String
-  deskripsi     String
-  katagories    String
-  nomorContact  String
-  provinsi      String
-  kota          String
-  Kecamatan     String
-  Kelurahan     String
+model Paket {
+  id            String    @id @default(cuid())
+  isipaket      String
+  from          String?
+  fotoPaket     String?
+  fotoPenerima  String?
+  to            String?
+  cityf         String
+  cityt         String
+  jadwal        String
+  pay           String
+  jam           String
+  berat         String
+  volume        String
+  jenisPaket    String
+  namaPengirim  String 
+  namaPenerima  String 
+  nomorPengirim String
+  nomorPenerima String
+  harga         String
+  author        User?     @relation(fields: [AuthorId], references: [email])
+  AuthorId      String?
+  CreateDateAt  DateTime  @default(now())
+  UpdatedAt     DateTime  @updatedAt
+  Pesanan       Pesanan[]
+}
+
+model travel {
+  id             String    @id @default(cuid())
+  from           String?
+  to             String?
+  mapfrom        String
+  cityf          String
+  cityt          String
+  mapto          String
+  jadwal         String
+  jam            String
+  pay            String
+  image          String?
+  status         String
+  namaPenumpang  String
+  jenisTravel    String
+  nomorPengirim  String
+  harga          String
+  author         User?     @relation(fields: [AuthorId], references: [email])
+  AuthorId       String?
+  CreateDateAt   DateTime  @default(now())
+  UpdatedAt      DateTime  @updatedAt
+  Pesanan        Pesanan[]
+}
+
+model Rute {
+  id            String  @id @default(cuid())
+  From          String
+  to            String
+  image         String?
+  provinsi      String?
+  kota          String?
+  Kecamatan     String?
+  Kelurahan     String?
   alamat        String
-  Latitude      String
-  Longitude     String
-  fotoProfile   String?
-  fotoDashboard String?
+  Latitude      String?
+  Longitude     String?
   jadwal        String?
   jamOprasional String?
-  website       String?
-  instagram     String?
-  star          String?
-  produk        Produk[]
-  quickChat     QuickChat[]
-  laporan       Laporan[]
-  Notifikasi    Notifikasi[]
-  Author        User?        @relation(fields: [AuthorId], references: [email])
-  AuthorId      String?
-  CreateDateAt  DateTime     @default(now())
-  UpdatedAt     DateTime     @updatedAt
-}
-
-model Produk {
-  id            String         @id @default(cuid())
-  namaProduk    String
-  detailProduk  String
-  hargaProduk   String
-  variantProduk Json?
-  hargavariant  Json?
-  fotoProduk    Json?
-  video         Json?
-  Stok          String?
-  catProduk     String
-  volume        String?
-  berat         String?
-  JenisProduk   String?
-  Lokasi        String?
-  diskon        String?
-  ulasanProduk  UlasanProduk[]
-  toko          Toko?          @relation(fields: [tokoId], references: [id])
-  tokoId        String?        @map("toko_id")
-  Pesanan       Pesanan?       @relation(fields: [PesananId], references: [id])
-  PesananId     String?
-  CreateDateAt  DateTime       @default(now())
-  UpdatedAt     DateTime       @updatedAt
-  Laporan       Laporan[]
-}
-
-model QuickChat {
-  id           String   @id @default(cuid())
-  ulasan       String
-  toko         Toko?    @relation(fields: [tokoId], references: [id])
-  tokoId       String   @map("toko_id")
-  Author       User?    @relation(fields: [AuthorId], references: [email])
+  harga          String?
+  Notifikasi   Notifikasi[]
+  Author       User?        @relation(fields: [AuthorId], references: [email])
   AuthorId     String?
-  CreateDateAt DateTime @default(now())
-  UpdatedAt    DateTime @updatedAt
-}
-
-model Laporan {
-  id           String   @id @default(cuid())
-  ulasan       String
-  nama         String
-  toko         Toko?    @relation(fields: [tokoId], references: [id])
-  tokoId       String   @map("toko_id")
-  produk       Produk?  @relation(fields: [produkId], references: [id])
-  produkId     String   @map("produk_id")
-  Author       User?    @relation(fields: [AuthorId], references: [email])
-  AuthorId     String?
-  Agenda       Agenda?  @relation(fields: [AgendaId], references: [id])
-  AgendaId     String?
-  CreateDateAt DateTime @default(now())
-  UpdatedAt    DateTime @updatedAt
-}
-
-model UlasanProduk {
-  id           String   @id @default(cuid())
-  ulasan       String
-  start        String
-  fotoUlasan   Json?
-  produk       Produk?  @relation(fields: [produkId], references: [id], onDelete: Cascade)
-  produkId     String   @map("produk_id")
-  Author       User?    @relation(fields: [AuthorId], references: [email])
-  AuthorId     String?
-  CreateDateAt DateTime @default(now())
-  UpdatedAt    DateTime @updatedAt
-}
-
-model Lowongan {
-  id                String   @id @default(cuid())
-  namaLowongan      String
-  namaInstansi      String
-  provinsi          String
-  kota              String
-  katagori          String
-  deskripsiLowongan String
-  requirement       String
-  Salary            String
-  expired           String
-  Latitude          String?
-  longitude         String?
-  fotoProfile       String?
-  background        String?
-  nocontact         String
-  linkGform         String?
-  users             User?    @relation(fields: [userId], references: [email], onDelete: Cascade)
-  userId            String?  @map("user_id")
-  CreateDateAt      DateTime @default(now())
-  UpdatedAt         DateTime @updatedAt
-}
-
-model Mhq {
-  id          String       @id @default(cuid())
-  fotoProfile String
-  alamat      String
-  lokasi      String
-  contact     String
-  iklan       Json?
-  hewan       Hewan[]
-  pesananMhq  PesananMhq[]
-}
-
-model Hewan {
-  id           String   @id @default(cuid())
-  gambar       Json?
-  lokasi       String?
-  bobot        String
-  jenisHewan   String
-  Kelas        String
-  noReg        String
-  status       String
-  Harga        String
-  datapesanan  Mhq?     @relation(fields: [pesananId], references: [id], onDelete: Cascade)
-  pesananId    String?  @map("user_id")
-  CreateDateAt DateTime @default(now())
-  UpdatedAt    DateTime @updatedAt
-}
-
-model PesananMhq {
-  id               String      @id @default(cuid())
-  email            String?
-  namaPembeli      String
-  alamat           String
-  contact          String
-  statusQurban     String
-  jenisHewan       String
-  noReg            String?
-  idHewan          String
-  jenisPaket       String
-  pengiriman       String
-  StatusPembelian  String?
-  statusPesanan    String
-  statusPembayaran String?
-  buktiTransfer    String
-  penyembelihan    String?
-  bagianDaging     String?
-  dokumentasi      String?
-  nofaktur         String?
-  buktiditerima    String?
-  Sales            String?
-  datapesanan      Mhq?        @relation(fields: [pesananId], references: [id], onDelete: Cascade)
-  pesananId        String?     @map("user_id")
-  notiv            Notifikasi? @relation(fields: [notivId], references: [id])
-  notivId          String?
-  CreateDateAt     DateTime    @default(now())
-  UpdatedAt        DateTime    @updatedAt
+  CreateDateAt DateTime     @default(now())
+  UpdatedAt    DateTime     @updatedAt
 }
 
 model Agenda {
@@ -326,30 +229,7 @@ model Agenda {
   notivId           String?
   CreateDateAt      DateTime    @default(now())
   UpdatedAt         DateTime    @updatedAt
-  Komunitas         Komunitas?  @relation(fields: [komunitasId], references: [id])
   komunitasId       String?
-  Laporan           Laporan[]
-
-}
-
-model Komunitas {
-  id            String   @id @default(cuid())
-  namaKomunitas String
-  fotoProfile   String?
-  dashboard     String?
-  deskripsi     String
-  alamat        String
-  instagram     String?
-  facebook      String?
-  tiktok        String?
-  lokasi        String
-  contact       String
-  iklan         Json?
-  Agenda        Agenda[]
-  users         User?    @relation(fields: [userId], references: [email], onDelete: Cascade)
-  userId        String?  @map("user_id")
-    CreateDateAt      DateTime    @default(now())
-  UpdatedAt         DateTime    @updatedAt
 }
 
 model VerificationToken {
