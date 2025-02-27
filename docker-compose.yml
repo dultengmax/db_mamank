@@ -18,7 +18,7 @@ services:
       POSTGRES_PASSWORD: mamank_travel1234
       POSTGRES_DB: mamank_travel
     ports:
-      - '5434:5434'
+      - '5433:5432'
 
 volumes:
   postgres-data:
