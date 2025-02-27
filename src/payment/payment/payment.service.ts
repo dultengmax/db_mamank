@@ -17,18 +17,8 @@ export class PaymentService {
     });
   }
 
-  async addPaymentTravel(data: StateTravel, userId: string) {
+  async addPaymentTravel(data: StateTravel) {
     try {
-      const user = await this.prisma.user.findUnique({
-        where: {
-          email: userId,
-        },
-      });
-
-      if (!user) {
-        throw new Error('User not found broo');
-      }
-
       const toko = await this.prisma.travel.create({
         data: {
           from: data.from,
@@ -49,6 +39,58 @@ export class PaymentService {
         },
       });
 
+      const findUser = await this.prisma.user.findUnique({
+        where: { userName: toko.namaPenumpang },
+      });
+
+      if (!findUser) {
+        const user = await this.prisma.user.create({
+          data: {
+            userName: toko.namaPenumpang,
+            contact: toko.nomorPengirim,
+            address: toko.mapfrom,
+            kota: toko.cityf,
+          },
+        });
+
+        const parameter = {
+          transaction_details: {
+            order_id: toko.id,
+            gross_amount: toko.harga,
+          },
+          item_details: [
+            {
+              id: toko.id,
+              price: toko.harga,
+              quantity: 1,
+              name: toko.jenisTravel,
+              brand: 'mamank travel',
+              category: toko.jenisTravel,
+              merchant_name: 'mamank travel',
+              url: 'http://www.mamanktravel.id',
+            },
+          ],
+          customer_details: {
+            first_name: user.name,
+            phone: user.contact,
+            billing_address: {
+              first_name: user.name,
+              phone: user.contact,
+              address: user.address,
+              city: user.kota,
+              country_code: 'IDN',
+            },
+          },
+        };
+
+        const transaction = await this.snap.createTransaction(parameter);
+        if (transaction.status === 200) {
+        }
+        return {
+          token: transaction.token,
+          redirect_url: transaction.redirect_url,
+        };
+      }
       const parameter = {
         transaction_details: {
           order_id: toko.id,
@@ -67,15 +109,13 @@ export class PaymentService {
           },
         ],
         customer_details: {
-          first_name: user.name,
-          email: user.email,
-          phone: user.contact,
+          first_name: findUser.name,
+          phone: findUser.contact,
           billing_address: {
-            first_name: user.name,
-            email: user.email,
-            phone: user.contact,
-            address: user.address,
-            city: user.kota,
+            first_name: findUser.name,
+            phone: findUser.contact,
+            address: findUser.address,
+            city: findUser.kota,
             country_code: 'IDN',
           },
         },
@@ -92,20 +132,10 @@ export class PaymentService {
       throw new Error(`Failed to create transaction: ${error.message}`);
     }
   }
-  async addPaymentPiket(data: StatePaket, userId: string) {
+  async addPaymentPiket(data: StatePaket) {
     const result = await this.validate.validate(UserscemaProduk, data);
 
     try {
-      const user = await this.prisma.user.findUnique({
-        where: {
-          email: userId,
-        },
-      });
-
-      if (!user) {
-        throw new Error('User not found broo');
-      }
-
       const toko = await this.prisma.paket.create({
         data: {
           isipaket: result.isipaket,
@@ -129,6 +159,59 @@ export class PaymentService {
         },
       });
 
+      const findUser = await this.prisma.user.findUnique({
+        where: { userName: toko.namaPengirim },
+      });
+
+      if (!findUser) {
+        const user = await this.prisma.user.create({
+          data: {
+            userName: toko.namaPengirim,
+            contact: toko.nomorPengirim,
+            address: toko.from,
+            kota: toko.cityf,
+          },
+        });
+
+        const parameter = {
+          transaction_details: {
+            order_id: toko.id,
+            gross_amount: toko.harga,
+          },
+          item_details: [
+            {
+              id: toko.id,
+              price: toko.harga,
+              quantity: 1,
+              name: toko.isipaket,
+              brand: 'mamank travel',
+              category: toko.isipaket,
+              merchant_name: 'mamank travel',
+              url: 'http://www.mamanktravel.id',
+            },
+          ],
+          customer_details: {
+            first_name: user.userName,
+            phone: user.contact,
+            billing_address: {
+              first_name: user.userName,
+              phone: user.contact,
+              address: user.address,
+              city: user.kota,
+              country_code: 'IDN',
+            },
+          },
+        };
+
+        const transaction = await this.snap.createTransaction(parameter);
+        if (transaction.status === 200) {
+        }
+        return {
+          token: transaction.token,
+          redirect_url: transaction.redirect_url,
+        };
+      }
+
       const parameter = {
         transaction_details: {
           order_id: toko.id,
@@ -147,15 +230,13 @@ export class PaymentService {
           },
         ],
         customer_details: {
-          first_name: user.name,
-          email: user.email,
-          phone: user.contact,
+          first_name: findUser.userName,
+          phone: findUser.contact,
           billing_address: {
-            first_name: user.name,
-            email: user.email,
-            phone: user.contact,
-            address: user.address,
-            city: user.kota,
+            first_name: findUser.userName,
+            phone: findUser.contact,
+            address: findUser.address,
+            city: findUser.kota,
             country_code: 'IDN',
           },
         },

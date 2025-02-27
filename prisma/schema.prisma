@@ -195,7 +195,7 @@ model Rute {
   Longitude     String?
   jadwal        String?
   jamOprasional String?
-  harga          String?
+  harga         String?
   Notifikasi   Notifikasi[]
   Author       User?        @relation(fields: [AuthorId], references: [email])
   AuthorId     String?

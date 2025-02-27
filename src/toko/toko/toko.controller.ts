@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   FileTypeValidator,
   Get,
   Header,
@@ -19,7 +20,8 @@ import { stateToko } from './toko.model';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { extname, join } from 'path';
+import { promises as fs } from 'fs';
 
 @Controller('rute')
 export class TokoController {
@@ -48,7 +50,7 @@ export class TokoController {
     return this.toko.UpdateRute(Req, email, id);
   }
 
-  @Post()
+  @Post('CarouselImage')
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -63,7 +65,7 @@ export class TokoController {
       }),
     }),
   )
-  uploadFile(
+  async uploadFileCrsl(
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -74,13 +76,81 @@ export class TokoController {
     )
     file: Express.Multer.File,
   ) {
+    await this.toko.addImageCarousel(file.filename);
     return {
       message: 'File uploaded successfully!',
       filename: file.filename,
     };
   }
 
-  @Get('findRute:id')
+  @Delete('editImage')
+  async deleteFileCr(
+    @Query('filename') filename: string,
+    @Query('id') id: string,
+  ) {
+    const filePath = join(process.cwd(), 'uploads', filename);
+
+    try {
+      await fs.unlink(filePath);
+      await this.toko.DeleteImagCarousel(filename, id); // Hapus entitas dari database
+      return { message: 'File deleted successfully!' };
+    } catch (error) {
+      return { message: `${error} File not found or failed to delete.` };
+    }
+  }
+
+  @Post('ruteImage')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, callback) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          const filename = `${file.originalname.split('.')[0]}-${uniqueSuffix}${ext}`;
+          callback(null, filename);
+        },
+      }),
+    }),
+  )
+  async uploadFile(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
+          new FileTypeValidator({ fileType: '.(png|jpg|jpeg)' }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+    @Query('id')
+    id: string,
+  ) {
+    await this.toko.addImageRute(file.filename, id);
+    return {
+      message: 'File uploaded successfully!',
+      filename: file.filename,
+    };
+  }
+
+  @Delete('editImage')
+  async deleteFile(
+    @Query('filename') filename: string,
+    @Query('id') id: string,
+  ) {
+    const filePath = join(process.cwd(), 'uploads', filename);
+
+    try {
+      await fs.unlink(filePath);
+      await this.toko.DeleteImageRute(filename, id); // Hapus entitas dari database
+      return { message: 'File deleted successfully!' };
+    } catch (error) {
+      return { message: `${error} File not found or failed to delete.` };
+    }
+  }
+
+  @Get('findRute')
   @UseInterceptors(CacheInterceptor)
   @HttpCode(200)
   @Header('Content-Type', 'application/json')

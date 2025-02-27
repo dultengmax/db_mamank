@@ -11,6 +11,7 @@ export class stateToko {
   Longitude: string;
   jadwal: string;
   jamOprasional: string;
+  harga: string;
 }
 
 export class stateNotif {

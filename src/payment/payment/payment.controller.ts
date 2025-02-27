@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { StatePaket, StateTravel } from './payment.model';
 
@@ -6,17 +6,11 @@ import { StatePaket, StateTravel } from './payment.model';
 export class PaymentController {
   constructor(private payment: PaymentService) {}
   @Post('travel')
-  async PaymetnTravel(
-    @Body() data: StateTravel,
-    @Query('userId') userId: string,
-  ) {
-    return this.payment.addPaymentTravel(data, userId);
+  async PaymetnTravel(@Body() data: StateTravel) {
+    return this.payment.addPaymentTravel(data);
   }
   @Post('paket')
-  async paymentPaket(
-    @Body() data: StatePaket,
-    @Query('userId') userId: string,
-  ) {
-    return this.payment.addPaymentPiket(data, userId);
+  async paymentPaket(@Body() data: StatePaket) {
+    return this.payment.addPaymentPiket(data);
   }
 }

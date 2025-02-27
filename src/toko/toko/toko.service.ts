@@ -1,6 +1,6 @@
 import { Injectable, HttpException } from '@nestjs/common';
 import { ValidationService } from 'src/validation/validation/validation.service';
-import { stateCarousel, stateToko } from './toko.model';
+import { stateToko } from './toko.model';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { Rute } from '@prisma/client';
 import { UserSchemaRute } from './toko.validation';
@@ -31,6 +31,7 @@ export class TokoService {
         jadwal: result.jadwal,
         jamOprasional: result.jamOprasional,
         AuthorId: users.email,
+        harga: result.harga,
       },
     });
 
@@ -69,6 +70,7 @@ export class TokoService {
         alamat: result.alamat,
         jadwal: result.jadwal,
         jamOprasional: result.jamOprasional,
+        harga: result.harga,
       },
     });
 
@@ -123,11 +125,59 @@ export class TokoService {
     }
   }
 
-  async addCarousel(data: string): Promise<stateCarousel> {
+  async addImageRute(data: string, id: string) {
+    try {
+      const toko = await this.prisma.rute.update({
+        where: {
+          id: id,
+        },
+        data: {
+          image: data,
+        },
+      });
+      return toko;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('User not found', 404);
+    }
+  }
+  async addImageCarousel(data: string) {
     try {
       const toko = await this.prisma.carousel.create({
         data: {
           carousel: data,
+        },
+      });
+      return toko;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('User not found', 404);
+    }
+  }
+  async DeleteImagCarousel(data: string, id: string) {
+    try {
+      const toko = await this.prisma.carousel.update({
+        where: {
+          id: id,
+        },
+        data: {
+          carousel: null,
+        },
+      });
+      return toko;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('User not found', 404);
+    }
+  }
+  async DeleteImageRute(data: string, id: string) {
+    try {
+      const toko = await this.prisma.rute.update({
+        where: {
+          id: id,
+        },
+        data: {
+          image: null,
         },
       });
       return toko;

@@ -23,4 +23,7 @@ export const UserSchemaRute = z.object({
   jamOprasional: z.string().min(10, {
     message: '  jam oprasional harus di isi',
   }),
+  harga: z.string().min(1, {
+    message: '  harga  harus di isi',
+  }),
 });
