@@ -31,6 +31,18 @@ export const UserscemaProduk = z.object({
   nomorPenerima: z.string().min(2, {
     message: 'nomor penerima ',
   }),
+  namaPenerima: z.string().min(2, {
+    message: 'nomor penerima ',
+  }),
+  namaPengirim: z.string().min(2, {
+    message: 'nomor penerima ',
+  }),
+  cityf: z.string().min(2, {
+    message: 'nomor penerima ',
+  }),
+  cityt: z.string().min(2, {
+    message: 'nomor penerima ',
+  }),
 
   fotoPaket: z.string().min(10, {
     message: 'foto paket harus di isi',

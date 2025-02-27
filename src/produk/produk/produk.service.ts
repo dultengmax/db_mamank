@@ -131,4 +131,17 @@ export class ProdukService {
       throw new HttpException('User not found', 404);
     }
   }
+  async FindPaketAll(id: string) {
+    try {
+      const produk = await this.prisma.paket.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      return produk;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('User not found', 404);
+    }
+  }
 }

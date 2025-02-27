@@ -49,7 +49,7 @@ model User {
   email         String?      @unique
   emailVerified DateTime?    @map("email_verified")
   image         String?
-  contact       String?
+  contact       String?      @unique
   provinsi      String?
   kota          String?
   kecamatan     String?
@@ -150,7 +150,7 @@ model Paket {
   nomorPengirim String
   nomorPenerima String
   harga         String
-  author        User?     @relation(fields: [AuthorId], references: [email])
+  author        User?     @relation(fields: [AuthorId], references: [contact])
   AuthorId      String?
   CreateDateAt  DateTime  @default(now())
   UpdatedAt     DateTime  @updatedAt
@@ -174,7 +174,7 @@ model travel {
   jenisTravel    String
   nomorPengirim  String
   harga          String
-  author         User?     @relation(fields: [AuthorId], references: [email])
+  author         User?     @relation(fields: [AuthorId], references: [contact])
   AuthorId       String?
   CreateDateAt   DateTime  @default(now())
   UpdatedAt      DateTime  @updatedAt

@@ -20,37 +20,37 @@ export class PaymentService {
 
   async addPaymentTravel(data: StateTravel) {
     try {
-      const toko = await this.prisma.travel.create({
-        data: {
-          from: data.from,
-          to: data.to,
-          mapfrom: data.mapfrom,
-          mapto: data.mapto,
-          image: data.image,
-          status: data.status,
-          namaPenumpang: data.namaPenumpang,
-          jenisTravel: data.jenisTraveller,
-          nomorPengirim: data.nomorPengirim,
-          harga: data.harga,
-          cityf: data.cityf,
-          cityt: data.cityt,
-          jadwal: data.jadwal,
-          pay: data.pay,
-          jam: data.jam,
-        },
-      });
-
       const findUser = await this.prisma.user.findUnique({
-        where: { userName: toko.namaPenumpang },
+        where: { userName: data.namaPenumpang },
       });
 
       if (!findUser) {
         const user = await this.prisma.user.create({
           data: {
-            userName: toko.namaPenumpang,
-            contact: toko.nomorPengirim,
-            address: toko.mapfrom,
-            kota: toko.cityf,
+            userName: data.namaPenumpang,
+            contact: data.nomorPengirim,
+            address: data.mapfrom,
+            kota: data.cityf,
+          },
+        });
+        const toko = await this.prisma.travel.create({
+          data: {
+            from: data.from,
+            to: data.to,
+            mapfrom: data.mapfrom,
+            mapto: data.mapto,
+            image: data.image,
+            status: data.status,
+            namaPenumpang: data.namaPenumpang,
+            jenisTravel: data.jenisTraveller,
+            nomorPengirim: data.nomorPengirim,
+            harga: data.harga,
+            cityf: data.cityf,
+            cityt: data.cityt,
+            jadwal: data.jadwal,
+            pay: data.pay,
+            jam: data.jam,
+            AuthorId: findUser.contact,
           },
         });
 
@@ -92,6 +92,26 @@ export class PaymentService {
           redirect_url: transaction.redirect_url,
         };
       }
+      const toko = await this.prisma.travel.create({
+        data: {
+          from: data.from,
+          to: data.to,
+          mapfrom: data.mapfrom,
+          mapto: data.mapto,
+          image: data.image,
+          status: data.status,
+          namaPenumpang: data.namaPenumpang,
+          jenisTravel: data.jenisTraveller,
+          nomorPengirim: data.nomorPengirim,
+          harga: data.harga,
+          cityf: data.cityf,
+          cityt: data.cityt,
+          jadwal: data.jadwal,
+          pay: data.pay,
+          jam: data.jam,
+          AuthorId: findUser.contact,
+        },
+      });
       const parameter = {
         transaction_details: {
           order_id: toko.id,
@@ -137,43 +157,42 @@ export class PaymentService {
     const result = await this.validate.validate(UserscemaProduk, data);
 
     try {
-      const toko = await this.prisma.paket.create({
-        data: {
-          isipaket: result.isipaket,
-          from: result.from,
-          to: result.to,
-          berat: result.berat,
-          volume: result.volume,
-          jenisPaket: result.jenisPaket,
-          nomorPengirim: result.nomorPengirim,
-          nomorPenerima: result.nomorPenerima,
-          harga: result.harga,
-          fotoPaket: result.fotoPaket,
-          fotoPenerima: result.fotoPenerima,
-          cityf: data.cityf,
-          cityt: data.cityt,
-          jadwal: data.jadwal,
-          pay: data.pay,
-          jam: data.jam,
-          namaPenerima: 'pending',
-          namaPengirim: 'pending',
-        },
-      });
-
       const findUser = await this.prisma.user.findUnique({
-        where: { userName: toko.namaPengirim },
+        where: { userName: result.namaPengirim },
       });
 
       if (!findUser) {
         const user = await this.prisma.user.create({
           data: {
-            userName: toko.namaPengirim,
-            contact: toko.nomorPengirim,
-            address: toko.from,
-            kota: toko.cityf,
+            userName: result.namaPengirim,
+            contact: result.nomorPengirim,
+            address: result.from,
+            kota: result.cityf,
           },
         });
 
+        const toko = await this.prisma.paket.create({
+          data: {
+            isipaket: result.isipaket,
+            from: result.from,
+            to: result.to,
+            berat: result.berat,
+            volume: result.volume,
+            jenisPaket: result.jenisPaket,
+            nomorPengirim: result.nomorPengirim,
+            nomorPenerima: result.nomorPenerima,
+            harga: result.harga,
+            fotoPaket: result.fotoPaket,
+            fotoPenerima: result.fotoPenerima,
+            cityf: data.cityf,
+            cityt: data.cityt,
+            jadwal: data.jadwal,
+            pay: data.pay,
+            jam: data.jam,
+            namaPenerima: 'pending',
+            namaPengirim: 'pending',
+          },
+        });
         const parameter = {
           transaction_details: {
             order_id: toko.id,
@@ -213,6 +232,28 @@ export class PaymentService {
         };
       }
 
+      const toko = await this.prisma.paket.create({
+        data: {
+          isipaket: result.isipaket,
+          from: result.from,
+          to: result.to,
+          berat: result.berat,
+          volume: result.volume,
+          jenisPaket: result.jenisPaket,
+          nomorPengirim: result.nomorPengirim,
+          nomorPenerima: result.nomorPenerima,
+          harga: result.harga,
+          fotoPaket: result.fotoPaket,
+          fotoPenerima: result.fotoPenerima,
+          cityf: data.cityf,
+          cityt: data.cityt,
+          jadwal: data.jadwal,
+          pay: data.pay,
+          jam: data.jam,
+          namaPenerima: 'pending',
+          namaPengirim: 'pending',
+        },
+      });
       const parameter = {
         transaction_details: {
           order_id: toko.id,
