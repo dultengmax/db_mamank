@@ -53,7 +53,7 @@ export class ProdukController {
     return this.produk.DeletePaket(id);
   }
 
-  @Get('findpaket/:id')
+  @Get('findpaket')
   @UseInterceptors(CacheInterceptor)
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
