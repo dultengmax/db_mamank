@@ -8,9 +8,10 @@ import { ValidationService } from 'src/validation/validation/validation.service'
 @Injectable()
 export class PaymentService {
   private snap: Snap;
-  private prisma: PrismaService;
-  private validate: ValidationService;
-  constructor() {
+  constructor(
+    private prisma: PrismaService,
+    private validate: ValidationService,
+  ) {
     this.snap = new Snap({
       isProduction: false, // Set true untuk mode production
       serverKey: 'SB-Mid-server-lVyqZj-3S-PvV9a0_nKggFES', // Ganti dengan server key Anda

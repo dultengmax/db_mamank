@@ -7,7 +7,7 @@ services:
     volumes:
       - uploads:/app/uploads
     environment:
-      - DATABASE_URL=postgresql://nestjs2:mamank_travel1234@db:5434/mamank_travel
+      - DATABASE_URL=postgresql://nestjs2:mamank_travel1234@db:5432/mamank_travel
       - password="226bca3c-d192-4fd4-a622-8da16d14b7bd"
     depends_on:
       - db

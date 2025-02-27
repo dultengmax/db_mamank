@@ -22,11 +22,29 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { promises as fs } from 'fs';
+import { StatePaket, StateTravel } from 'src/payment/payment/payment.model';
 
 @Controller('rute')
 export class TokoController {
   constructor(private toko: TokoService) {}
 
+  @Post('travel')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  @UseFilters(ValidationFilter)
+  async PaymetnTravel(
+    @Body() data: StateTravel,
+  ): Promise<{ token: string; redirect_url: string }> {
+    return this.toko.addPaymentTravel(data);
+  }
+
+  @Post('paket')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  @UseFilters(ValidationFilter)
+  async paymentPaket(@Body() data: StatePaket) {
+    return this.toko.addPaymentPiket(data);
+  }
   // ini contoh method yang mengembalikan semua data user
   @Post('CreateRute')
   @HttpCode(200)

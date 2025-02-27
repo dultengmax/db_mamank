@@ -20,6 +20,7 @@ import { ProdukService } from './produk/produk/produk.service';
 
 import { CacheModule } from '@nestjs/cache-manager';
 import { TravelModule } from './travel/travel.module';
+import { PaymentService } from './payment/payment/payment.service';
 @Module({
   imports: [
     WinstonModule.forRoot({
@@ -53,8 +54,8 @@ import { TravelModule } from './travel/travel.module';
     PrismaService,
     UsersService,
     TokoService,
-
     ProdukService,
+    PaymentService,
   ],
 })
 export class AppModule implements NestModule {
