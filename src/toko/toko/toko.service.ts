@@ -4,20 +4,13 @@ import { stateToko } from './toko.model';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { Rute } from '@prisma/client';
 import { UserSchemaRute } from './toko.validation';
-import { Snap } from 'midtrans-client';
 
 @Injectable()
 export class TokoService {
-  private snap: Snap;
   constructor(
     private prisma: PrismaService,
     private validate: ValidationService,
-  ) {
-    this.snap = new Snap({
-      isProduction: false, // Set true untuk mode production
-      serverKey: 'SB-Mid-server-lVyqZj-3S-PvV9a0_nKggFES', // Ganti dengan server key Anda
-    });
-  }
+  ) {}
 
   async CreateRute(data: stateToko, id: string): Promise<Rute> {
     const result = await this.validate.validate(UserSchemaRute, data);
@@ -34,9 +27,7 @@ export class TokoService {
       data: {
         From: result.From,
         to: result.to,
-        alamat: result.alamat,
-        jadwal: result.jadwal,
-        jamOprasional: result.jamOprasional,
+        alamat: result.to,
         AuthorId: users.email,
         harga: result.harga,
       },
@@ -74,9 +65,7 @@ export class TokoService {
       data: {
         From: result.From,
         to: result.to,
-        alamat: result.alamat,
-        jadwal: result.jadwal,
-        jamOprasional: result.jamOprasional,
+        alamat: result.to,
         harga: result.harga,
       },
     });
@@ -133,6 +122,8 @@ export class TokoService {
   }
 
   async addImageRute(data: string, id: string) {
+    const url = `/uploads/${data}`;
+
     try {
       const cekid = await this.prisma.rute.findMany({
         where: {
@@ -147,7 +138,7 @@ export class TokoService {
           id: id,
         },
         data: {
-          image: data,
+          image: url,
         },
       });
       return toko;
@@ -157,10 +148,11 @@ export class TokoService {
     }
   }
   async addImageCarousel(data: string) {
+    const url = `/uploads/${data}`;
     try {
       const toko = await this.prisma.carousel.create({
         data: {
-          carousel: data,
+          carousel: url,
         },
       });
       return toko;

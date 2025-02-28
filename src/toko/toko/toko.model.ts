@@ -1,16 +1,6 @@
 export class stateToko {
   From: string;
   to: string;
-  image: string;
-  provinsi: string;
-  kota: string;
-  Kecamatan: string;
-  Kelurahan: string;
-  alamat: string;
-  Latitude: string;
-  Longitude: string;
-  jadwal: string;
-  jamOprasional: string;
   harga: string;
 }
 

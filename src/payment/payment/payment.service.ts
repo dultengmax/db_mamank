@@ -16,7 +16,7 @@ export class PaymentService {
     private validate: ValidationService,
   ) {
     this.snap = new Snap({
-      isProduction: true, // Set true untuk mode production
+      isProduction: false, // Set true untuk mode production
       serverKey: 'SB-Mid-server-lVyqZj-3S-PvV9a0_nKggFES', // Ganti dengan server key Anda
     });
   }
