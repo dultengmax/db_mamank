@@ -51,3 +51,54 @@ export const UserscemaProduk = z.object({
     message: 'foto paket harus di isi',
   }),
 });
+export const UserscemaTravel = z.object({
+  pay: z
+    .string()
+    .min(1, {
+      message: 'metode pembayaran',
+    })
+    .max(10, { message: 'tidak boleh lebih dari 25 huruf' }),
+  harga: z.string().min(1, {
+    message: 'harga harus lengkap ',
+  }),
+  jenisTravel: z.string().min(1, {
+    message: 'volume harus di isi',
+  }),
+  mapto: z.string().min(1, {
+    message: 'berat harus di isi',
+  }),
+  to: z.string().min(5, {
+    message: 'tujuan harus di isi',
+  }),
+  from: z.string().min(5, {
+    message: 'penjemputan harus di isi',
+  }),
+  mapfrom: z.string().min(1, {
+    message: 'jenis paket harus di isi',
+  }),
+  nomorPengirim: z.string().min(2, {
+    message: 'no pengirim harus di isi',
+  }),
+  nomorPenerima: z.string().min(2, {
+    message: 'nomor penerima ',
+  }),
+  namaPenerima: z.string().min(2, {
+    message: 'nomor penerima ',
+  }),
+  jadwal: z.string().min(2, {
+    message: 'nomor penerima ',
+  }),
+  cityf: z.string().min(2, {
+    message: 'nomor penerima ',
+  }),
+  cityt: z.string().min(2, {
+    message: 'nomor penerima ',
+  }),
+
+  namaPenumpang: z.string().min(5, {
+    message: 'nama penumpang minimal 2 harus di isi',
+  }),
+  resi: z.string().min(10, {
+    message: 'foto paket harus di isi',
+  }),
+});
