@@ -153,6 +153,11 @@ export class PaymentService {
       throw new Error(`Failed to create transaction: ${error.message}`);
     }
   }
+
+  async Travelall() {
+    const travels = await this.prisma.travel.findMany({});
+    return travels;
+  }
   async addPaymentPiket(data: StatePaket) {
     const result = await this.validate.validate(UserscemaProduk, data);
 
@@ -196,12 +201,12 @@ export class PaymentService {
         const parameter = {
           transaction_details: {
             order_id: toko.id,
-            gross_amount: toko.harga,
+            gross_amount: parseInt(toko.harga),
           },
           item_details: [
             {
               id: toko.id,
-              price: toko.harga,
+              price: parseInt(toko.harga),
               quantity: 1,
               name: toko.isipaket,
               brand: 'mamank travel',
@@ -257,12 +262,12 @@ export class PaymentService {
       const parameter = {
         transaction_details: {
           order_id: toko.id,
-          gross_amount: toko.harga,
+          gross_amount: parseInt(toko.harga),
         },
         item_details: [
           {
             id: toko.id,
-            price: toko.harga,
+            price: parseInt(toko.harga),
             quantity: 1,
             name: toko.isipaket,
             brand: 'mamank travel',

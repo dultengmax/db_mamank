@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Header,
   HttpCode,
   Post,
@@ -28,5 +29,11 @@ export class PaymentController {
   @UseFilters(ValidationFilter)
   async paymentPaket(@Body() data: StatePaket) {
     return this.payment.addPaymentPiket(data);
+  }
+  @Get('findTravel')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  async FindTravel() {
+    return this.payment.Travelall();
   }
 }

@@ -22,29 +22,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { promises as fs } from 'fs';
-import { StatePaket, StateTravel } from 'src/payment/payment/payment.model';
 
 @Controller('rute')
 export class TokoController {
   constructor(private toko: TokoService) {}
 
-  @Post('travel')
-  @HttpCode(200)
-  @Header('Content-Type', 'application/json')
-  @UseFilters(ValidationFilter)
-  async PaymetnTravel(
-    @Body() data: StateTravel,
-  ): Promise<{ token: string; redirect_url: string }> {
-    return this.toko.addPaymentTravel(data);
-  }
-
-  @Post('paket')
-  @HttpCode(200)
-  @Header('Content-Type', 'application/json')
-  @UseFilters(ValidationFilter)
-  async paymentPaket(@Body() data: StatePaket) {
-    return this.toko.addPaymentPiket(data);
-  }
   // ini contoh method yang mengembalikan semua data user
   @Post('CreateRute')
   @HttpCode(200)
@@ -101,7 +83,7 @@ export class TokoController {
     };
   }
 
-  @Delete('editImage')
+  @Delete('editImager')
   async deleteFileCr(
     @Query('filename') filename: string,
     @Query('id') id: string,
@@ -174,6 +156,20 @@ export class TokoController {
   @Header('Content-Type', 'application/json')
   async FindToko(@Query('id') id: string): Promise<stateToko> {
     return this.toko.FindRute(id);
+  }
+  @Get('findRuteall')
+  @UseInterceptors(CacheInterceptor)
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  async FindTokoMany(): Promise<stateToko[]> {
+    return this.toko.FindRuteMany();
+  }
+  @Get('findCarousel')
+  @UseInterceptors(CacheInterceptor)
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  async FindCarousel() {
+    return this.toko.FindImageCarousel();
   }
 
   @Get('ruteAll')
