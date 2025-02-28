@@ -1,7 +1,7 @@
 export class RegisterUserRequest {
   userName: string;
-  password: string;
-  email: string;
+  contact: string;
+  kota: string;
 }
 export class fotoProfileRequest {
   image: string;

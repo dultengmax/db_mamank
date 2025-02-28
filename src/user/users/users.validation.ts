@@ -13,27 +13,16 @@ export const UserSchema = z.object({
       message: 'tidak boleh di isi spasi',
     }),
 
-  email: z
+  contact: z
     .string()
     .min(1, {
       message: 'Email harus di isi',
     })
     .email({ message: 'email harus sesuai' }),
 
-  password: z
-    .string()
-    .min(8, {
-      message: 'password di isi minimal 8 karakter',
-    })
-    .regex(/[A-Z]/, {
-      message: 'harus ada huruf besar dan angka',
-    })
-    .regex(/[0-9]/, {
-      message: 'harus ada huruf besar dan angka',
-    })
-    .refine((data) => !/\s/.test(data), {
-      message: 'tidak boleh di isi spasi',
-    }),
+  kota: z.string().min(8, {
+    message: 'password di isi minimal 8 karakter',
+  }),
 });
 
 export const PasswordScema = z.object({
