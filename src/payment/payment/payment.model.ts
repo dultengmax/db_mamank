@@ -24,7 +24,7 @@ export class StateTravel {
   image: string;
   status: string;
   namaPenumpang: string;
-  jenisTraveller: string;
+  jenisTravel: string;
   volume: string;
   nomorPengirim: string;
   harga: string;

@@ -132,7 +132,6 @@ model Notifikasi {
 
 model Paket {
   id            String    @id @default(cuid())
-  resi          String
   isipaket      String
   from          String?
   fotoPaket     String?
@@ -145,7 +144,7 @@ model Paket {
   jam           String
   berat         String
   volume        String
-  jenisPaket    String
+  jenisPaket    String?
   namaPengirim  String 
   namaPenerima  String 
   nomorPengirim String
@@ -160,7 +159,6 @@ model Paket {
 
 model travel {
   id             String    @id @default(cuid())
-  resi           String?
   from           String?
   to             String?
   mapfrom        String

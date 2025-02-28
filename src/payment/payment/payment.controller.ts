@@ -18,9 +18,7 @@ export class PaymentController {
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
-  async PaymetnTravel(
-    @Body() data: StateTravel,
-  ): Promise<{ token: string; redirect_url: string }> {
+  async PaymetnTravel(@Body() data: StateTravel) {
     return this.payment.addPaymentTravel(data);
   }
   @Post('paket')

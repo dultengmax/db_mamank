@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { Snap } from 'midtrans-client';
 import { StatePaket, StateTravel } from './payment.model';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
-import { UserscemaProduk } from 'src/produk/produk/produk.validation';
+import {
+  UserscemaProduk,
+  UserscemaTravel,
+} from 'src/produk/produk/produk.validation';
 import { ValidationService } from 'src/validation/validation/validation.service';
 
 @Injectable()
@@ -13,42 +16,43 @@ export class PaymentService {
     private validate: ValidationService,
   ) {
     this.snap = new Snap({
-      isProduction: false, // Set true untuk mode production
+      isProduction: true, // Set true untuk mode production
       serverKey: 'SB-Mid-server-lVyqZj-3S-PvV9a0_nKggFES', // Ganti dengan server key Anda
     });
   }
 
   async addPaymentTravel(data: StateTravel) {
+    const result = await this.validate.validate(UserscemaTravel, data);
     try {
       const findUser = await this.prisma.user.findUnique({
-        where: { userName: data.namaPenumpang },
+        where: { userName: result.namaPenumpang },
       });
 
       if (!findUser) {
         const user = await this.prisma.user.create({
           data: {
-            userName: data.namaPenumpang,
-            contact: data.nomorPengirim,
-            address: data.mapfrom,
-            kota: data.cityf,
+            userName: result.namaPenumpang,
+            contact: result.nomorPengirim,
+            address: result.mapfrom,
+            kota: result.cityf,
           },
         });
         const toko = await this.prisma.travel.create({
           data: {
-            from: data.from,
-            to: data.to,
-            mapfrom: data.mapfrom,
-            mapto: data.mapto,
-            image: data.image,
-            status: data.status,
-            namaPenumpang: data.namaPenumpang,
-            jenisTravel: data.jenisTraveller,
-            nomorPengirim: data.nomorPengirim,
-            harga: data.harga,
-            cityf: data.cityf,
-            cityt: data.cityt,
-            jadwal: data.jadwal,
-            pay: data.pay,
+            from: result.from,
+            to: result.to,
+            mapfrom: result.mapfrom,
+            mapto: result.mapto,
+            image: result.image,
+            status: result.status,
+            namaPenumpang: result.namaPenumpang,
+            jenisTravel: result.jenisTravel,
+            nomorPengirim: result.nomorPengirim,
+            harga: result.harga,
+            cityf: result.cityf,
+            cityt: result.cityt,
+            jadwal: result.jadwal,
+            pay: result.pay,
             jam: data.jam,
             AuthorId: findUser.contact,
           },
@@ -94,20 +98,20 @@ export class PaymentService {
       }
       const toko = await this.prisma.travel.create({
         data: {
-          from: data.from,
-          to: data.to,
-          mapfrom: data.mapfrom,
-          mapto: data.mapto,
-          image: data.image,
-          status: data.status,
-          namaPenumpang: data.namaPenumpang,
-          jenisTravel: data.jenisTraveller,
-          nomorPengirim: data.nomorPengirim,
-          harga: data.harga,
-          cityf: data.cityf,
-          cityt: data.cityt,
-          jadwal: data.jadwal,
-          pay: data.pay,
+          from: result.from,
+          to: result.to,
+          mapfrom: result.mapfrom,
+          mapto: result.mapto,
+          image: result.image,
+          status: result.status,
+          namaPenumpang: result.namaPenumpang,
+          jenisTravel: result.jenisTravel,
+          nomorPengirim: result.nomorPengirim,
+          harga: result.harga,
+          cityf: result.cityf,
+          cityt: result.cityt,
+          jadwal: result.jadwal,
+          pay: result.pay,
           jam: data.jam,
           AuthorId: findUser.contact,
         },

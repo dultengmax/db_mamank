@@ -67,10 +67,10 @@ export const UserscemaTravel = z.object({
   mapto: z.string().min(1, {
     message: 'berat harus di isi',
   }),
-  to: z.string().min(5, {
+  to: z.string().min(1, {
     message: 'tujuan harus di isi',
   }),
-  from: z.string().min(5, {
+  from: z.string().min(1, {
     message: 'penjemputan harus di isi',
   }),
   mapfrom: z.string().min(1, {
@@ -79,10 +79,10 @@ export const UserscemaTravel = z.object({
   nomorPengirim: z.string().min(2, {
     message: 'no pengirim harus di isi',
   }),
-  nomorPenerima: z.string().min(2, {
+  status: z.string().min(2, {
     message: 'nomor penerima ',
   }),
-  namaPenerima: z.string().min(2, {
+  image: z.string().min(2, {
     message: 'nomor penerima ',
   }),
   jadwal: z.string().min(2, {
@@ -95,10 +95,7 @@ export const UserscemaTravel = z.object({
     message: 'nomor penerima ',
   }),
 
-  namaPenumpang: z.string().min(5, {
+  namaPenumpang: z.string().min(1, {
     message: 'nama penumpang minimal 2 harus di isi',
-  }),
-  resi: z.string().min(10, {
-    message: 'foto paket harus di isi',
   }),
 });
