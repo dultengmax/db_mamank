@@ -13,13 +13,9 @@ export const UserSchema = z.object({
       message: 'tidak boleh di isi spasi',
     }),
 
-  contact: z
-    .string()
-    .min(1, {
-      message: 'Email harus di isi',
-    })
-    .email({ message: 'email harus sesuai' }),
-
+  contact: z.string().min(1, {
+    message: 'Email harus di isi',
+  }),
   kota: z.string().min(8, {
     message: 'password di isi minimal 8 karakter',
   }),
