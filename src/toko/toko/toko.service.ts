@@ -16,7 +16,7 @@ export class TokoService {
     const result = await this.validate.validate(UserSchemaRute, data);
     const users = await this.prisma.user.findUnique({
       where: {
-        email: id,
+        userName: id,
         role: 'admin',
       },
     });
