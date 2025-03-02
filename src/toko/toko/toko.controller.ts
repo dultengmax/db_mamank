@@ -44,10 +44,10 @@ export class TokoController {
   @UseFilters(ValidationFilter)
   async EditStore(
     @Body() Req: stateToko,
-    @Query('email') email: string,
     @Query('id') id: string,
+    @Query('id2') id2: string,
   ): Promise<stateToko> {
-    return this.toko.UpdateRute(Req, email, id);
+    return this.toko.UpdateRute(Req, id, id2);
   }
 
   @Post('CarouselImage')
@@ -156,6 +156,16 @@ export class TokoController {
   @Header('Content-Type', 'application/json')
   async FindToko(@Query('id') id: string): Promise<stateToko> {
     return this.toko.FindRute(id);
+  }
+  @Get('findHarga')
+  @UseInterceptors(CacheInterceptor)
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  async FindHarga(
+    @Query('from') from: string,
+    @Query('to') to: string,
+  ): Promise<stateToko[]> {
+    return this.toko.FindHarga(from, to);
   }
   @Get('findRuteall')
   @UseInterceptors(CacheInterceptor)

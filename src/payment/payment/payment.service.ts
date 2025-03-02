@@ -157,11 +157,38 @@ export class PaymentService {
       throw new Error(`Failed to create transaction: ${error.message}`);
     }
   }
+  async EditPaymentTravel(data: StateTravel, id: string) {
+    const result = await this.validate.validate(UserscemaTravel, data);
+    try {
+      const toko = await this.prisma.travel.update({
+        where: {
+          id: id,
+        },
+        data: {
+          from: result.from,
+          to: result.to,
+          mapfrom: result.mapfrom,
+          mapto: result.mapto,
+          image: result.image,
+          status: result.status,
+          namaPenumpang: result.namaPenumpang,
+          jenisTravel: result.jenisTravel,
+          nomorPengirim: result.nomorPengirim,
+          harga: result.harga,
+          cityf: result.cityf,
+          cityt: result.cityt,
+          jadwal: result.jadwal,
+          pay: result.pay,
+          jam: data.jam,
+        },
+      });
 
-  async Travelall() {
-    const travels = await this.prisma.travel.findMany({});
-    return travels;
+      return toko;
+    } catch (error) {
+      throw new Error(`Failed to create transaction: ${error.message}`);
+    }
   }
+
   async addPaymentPiket(data: StatePaket) {
     const result = await this.validate.validate(UserscemaProduk, data);
 
@@ -303,5 +330,42 @@ export class PaymentService {
     } catch (error) {
       throw new Error(`Failed to create transaction: ${error.message}`);
     }
+  }
+  async editPaymentPiket(data: StatePaket, id: string) {
+    const result = await this.validate.validate(UserscemaProduk, data);
+
+    try {
+      const toko = await this.prisma.paket.update({
+        where: { id: id },
+        data: {
+          isipaket: result.isipaket,
+          from: result.from,
+          to: result.to,
+          berat: result.berat,
+          volume: result.volume,
+          jenisPaket: result.jenisPaket,
+          nomorPengirim: result.nomorPengirim,
+          nomorPenerima: result.nomorPenerima,
+          harga: result.harga,
+          fotoPaket: result.fotoPaket,
+          fotoPenerima: result.fotoPenerima,
+          cityf: data.cityf,
+          cityt: data.cityt,
+          jadwal: data.jadwal,
+          pay: data.pay,
+          jam: data.jam,
+          namaPenerima: 'pending',
+          namaPengirim: 'pending',
+        },
+      });
+      return toko;
+    } catch (error) {
+      throw new Error(`Failed to create transaction: ${error.message}`);
+    }
+  }
+
+  async Travelall() {
+    const travels = await this.prisma.travel.findMany({});
+    return travels;
   }
 }

@@ -32,10 +32,19 @@ export class TokoService {
         harga: result.harga,
       },
     });
+    const reverse = await this.prisma.rute.create({
+      data: {
+        From: result.to,
+        to: result.From,
+        alamat: result.to,
+        AuthorId: users.email,
+        harga: result.harga,
+      },
+    });
 
     const notification = await this.prisma.notifikasi.create({
       data: {
-        judulPesan: `selamat rute dari ${result.From} sampai ${result.to}`,
+        judulPesan: `selamat rute dari ${result.From} sampai ${result.to} berhasil dibuat`,
         StatusPesan: `rute berhasil dibuat pada ${toko.CreateDateAt}`,
         keterangan: 'bismillah semoga lancar usahanya  ',
         statusNotiv: 'toko berhasil dibuat',
@@ -45,10 +54,10 @@ export class TokoService {
     if (!notification.statusNotiv) {
       throw new HttpException('User not found', 404);
     }
-    return toko;
+    return toko && reverse;
   }
 
-  async UpdateRute(data: stateToko, email: string, id: string): Promise<Rute> {
+  async UpdateRute(data: stateToko, id: string, id2: string): Promise<Rute> {
     const result = await this.validate.validate(UserSchemaRute, data);
     const users = await this.prisma.user.findMany({
       where: {
@@ -69,18 +78,43 @@ export class TokoService {
         harga: result.harga,
       },
     });
+    const reverse = await this.prisma.rute.updateMany({
+      where: {
+        id: id2,
+      },
+      data: {
+        From: result.to,
+        to: result.to,
+        alamat: result.to,
+        harga: result.harga,
+      },
+    });
 
     if (!toko.count) {
       throw new HttpException('User not found', 404);
     }
 
-    return toko[0];
+    return toko[0] && reverse[0];
   }
   async FindRute(id: string): Promise<stateToko> {
     try {
       const toko = await this.prisma.rute.findUnique({
         where: {
           id: id,
+        },
+      });
+      return toko;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('User not found', 404);
+    }
+  }
+  async FindHarga(from: string, to: string): Promise<stateToko[]> {
+    try {
+      const toko = await this.prisma.rute.findMany({
+        where: {
+          From: from,
+          to: to,
         },
       });
       return toko;
