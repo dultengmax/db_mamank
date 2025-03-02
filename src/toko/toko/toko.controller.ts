@@ -34,9 +34,9 @@ export class TokoController {
   @UseFilters(ValidationFilter)
   async CreateStore(
     @Body() Req: stateToko,
-    @Query('email') email: string,
+    @Query('id') id: string,
   ): Promise<stateToko> {
-    return this.toko.CreateRute(Req, email);
+    return this.toko.CreateRute(Req, id);
   }
   @Post('editRute')
   @HttpCode(200)
