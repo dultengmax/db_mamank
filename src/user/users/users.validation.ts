@@ -6,7 +6,7 @@ export const UserSchema = z.object({
     .min(1, {
       message: 'UserName Harus Di isi',
     })
-    .max(15, {
+    .max(25, {
       message: 'UserName Tidak lebih dari 15 ',
     })
     .refine((data) => !/\s/.test(data), {
@@ -16,8 +16,8 @@ export const UserSchema = z.object({
   contact: z.string().min(1, {
     message: 'Email harus di isi',
   }),
-  kota: z.string().min(8, {
-    message: 'password di isi minimal 8 karakter',
+  kota: z.string().min(2, {
+    message: 'kota di isi minimal 8 karakter',
   }),
 });
 
