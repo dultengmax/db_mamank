@@ -50,4 +50,16 @@ export class PaymentController {
   async FindTravel() {
     return this.payment.Travelall();
   }
+  @Get('findResiTravel')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  async FindTravelResi(@Query('resi') resi: string) {
+    return this.payment.TravelFind(resi);
+  }
+  @Get('findResiPaket')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  async FindPaketResi(@Query('resi') resi: string) {
+    return this.payment.PaketFind(resi);
+  }
 }

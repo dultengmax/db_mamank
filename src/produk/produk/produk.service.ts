@@ -40,6 +40,7 @@ export class ProdukService {
         jadwal: data.jadwal,
         pay: data.pay,
         jam: data.jam,
+        resi: result.resi,
         namaPenerima: 'pending',
         namaPengirim: 'pending',
       },

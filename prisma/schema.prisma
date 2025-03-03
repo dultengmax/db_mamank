@@ -146,8 +146,8 @@ model Paket {
   berat         String
   volume        String
   jenisPaket    String?
-  namaPengirim  String 
-  namaPenerima  String 
+  namaPengirim  String? 
+  namaPenerima  String?
   nomorPengirim String
   nomorPenerima String
   harga         String

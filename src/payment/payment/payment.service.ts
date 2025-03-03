@@ -54,6 +54,7 @@ export class PaymentService {
             jadwal: result.jadwal,
             pay: result.pay,
             jam: data.jam,
+            resi: result.resi,
             AuthorId: findUser.contact,
           },
         });
@@ -113,6 +114,7 @@ export class PaymentService {
           jadwal: result.jadwal,
           pay: result.pay,
           jam: data.jam,
+          resi: result.resi,
           AuthorId: findUser.contact,
         },
       });
@@ -225,6 +227,7 @@ export class PaymentService {
             jadwal: data.jadwal,
             pay: data.pay,
             jam: data.jam,
+            resi: result.resi,
             namaPenerima: 'pending',
             namaPengirim: 'pending',
           },
@@ -286,6 +289,7 @@ export class PaymentService {
           jadwal: data.jadwal,
           pay: data.pay,
           jam: data.jam,
+          resi: result.resi,
           namaPenerima: 'pending',
           namaPengirim: 'pending',
         },
@@ -354,6 +358,7 @@ export class PaymentService {
           jadwal: data.jadwal,
           pay: data.pay,
           jam: data.jam,
+          resi: result.resi,
           namaPenerima: 'pending',
           namaPengirim: 'pending',
         },
@@ -366,6 +371,18 @@ export class PaymentService {
 
   async Travelall() {
     const travels = await this.prisma.travel.findMany({});
+    return travels;
+  }
+  async TravelFind(resi: string) {
+    const travels = await this.prisma.travel.findMany({
+      where: { resi: resi },
+    });
+    return travels;
+  }
+  async PaketFind(resi: string) {
+    const travels = await this.prisma.paket.findMany({
+      where: { resi: resi },
+    });
     return travels;
   }
 }

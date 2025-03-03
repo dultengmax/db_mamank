@@ -28,7 +28,7 @@ export class TokoController {
   constructor(private toko: TokoService) {}
 
   // ini contoh method yang mengembalikan semua data user
-  @Post('CreateRute')
+  @Post('createRute')
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
@@ -44,10 +44,17 @@ export class TokoController {
   @UseFilters(ValidationFilter)
   async EditStore(
     @Body() Req: stateToko,
-    @Query('id') id: string,
-    @Query('id2') id2: string,
+    @Query('from') from: string,
+    @Query('to') to: string,
   ): Promise<stateToko> {
-    return this.toko.UpdateRute(Req, id, id2);
+    return this.toko.UpdateRute(Req, from, to);
+  }
+  @Post('deleteRute')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  @UseFilters(ValidationFilter)
+  async deleteStore(@Query('id') id: string): Promise<stateToko> {
+    return this.toko.DeleteRute(id);
   }
 
   @Post('CarouselImage')

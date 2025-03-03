@@ -56,8 +56,7 @@ export class TokoService {
     }
     return toko && reverse;
   }
-
-  async UpdateRute(data: stateToko, id: string, id2: string): Promise<Rute> {
+  async UpdateRute(data: stateToko, from: string, to: string): Promise<Rute> {
     const result = await this.validate.validate(UserSchemaRute, data);
     const users = await this.prisma.user.findMany({
       where: {
@@ -69,7 +68,8 @@ export class TokoService {
     }
     const toko = await this.prisma.rute.updateMany({
       where: {
-        id: id,
+        From: from,
+        to: to,
       },
       data: {
         From: result.From,
@@ -80,7 +80,8 @@ export class TokoService {
     });
     const reverse = await this.prisma.rute.updateMany({
       where: {
-        id: id2,
+        From: to,
+        to: from,
       },
       data: {
         From: result.to,
@@ -95,6 +96,23 @@ export class TokoService {
     }
 
     return toko[0] && reverse[0];
+  }
+  async DeleteRute(id: string): Promise<Rute> {
+    const users = await this.prisma.user.findMany({
+      where: {
+        role: 'admin',
+      },
+    });
+    if (!users) {
+      throw new HttpException('User not found', 404);
+    }
+    const toko = await this.prisma.rute.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return toko;
   }
   async FindRute(id: string): Promise<stateToko> {
     try {
@@ -136,7 +154,6 @@ export class TokoService {
       throw new HttpException('User not found', 404);
     }
   }
-
   async FindTokoSearch(name: string): Promise<stateToko[]> {
     try {
       if (name == null || name == '')
@@ -154,7 +171,6 @@ export class TokoService {
       throw new HttpException('User not found', 404);
     }
   }
-
   async addImageRute(data: string, id: string) {
     const url = `/uploads/${data}`;
 

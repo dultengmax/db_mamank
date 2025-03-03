@@ -50,6 +50,9 @@ export const UserscemaProduk = z.object({
   fotoPenerima: z.string().min(10, {
     message: 'foto paket harus di isi',
   }),
+  resi: z.string().min(10, {
+    message: 'foto paket harus di isi',
+  }),
 });
 export const UserscemaTravel = z.object({
   pay: z
@@ -93,6 +96,9 @@ export const UserscemaTravel = z.object({
   }),
   cityt: z.string().min(2, {
     message: 'nomor penerima ',
+  }),
+  resi: z.string().min(2, {
+    message: 'resi penerima ',
   }),
 
   namaPenumpang: z.string().min(1, {
