@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   FileTypeValidator,
   Get,
   Header,
@@ -90,7 +89,7 @@ export class TokoController {
     };
   }
 
-  @Delete('editImager')
+  @Post('editImager')
   async deleteFileCr(
     @Query('filename') filename: string,
     @Query('id') id: string,
@@ -141,7 +140,7 @@ export class TokoController {
     };
   }
 
-  @Delete('editImage')
+  @Post('editImage')
   async deleteFile(
     @Query('filename') filename: string,
     @Query('id') id: string,

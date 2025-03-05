@@ -85,7 +85,7 @@ export class TokoService {
       },
       data: {
         From: result.to,
-        to: result.to,
+        to: result.From,
         alamat: result.to,
         harga: result.harga,
       },
@@ -222,12 +222,9 @@ export class TokoService {
   }
   async DeleteImagCarousel(data: string, id: string) {
     try {
-      const toko = await this.prisma.carousel.update({
+      const toko = await this.prisma.carousel.delete({
         where: {
           id: id,
-        },
-        data: {
-          carousel: null,
         },
       });
       return toko;
