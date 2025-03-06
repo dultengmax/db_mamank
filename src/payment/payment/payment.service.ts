@@ -62,12 +62,12 @@ export class PaymentService {
         const parameter = {
           transaction_details: {
             order_id: toko.id,
-            gross_amount: toko.harga,
+            gross_amount: parseInt(toko.harga),
           },
           item_details: [
             {
               id: toko.id,
-              price: toko.harga,
+              price: parseInt(toko.harga),
               quantity: 1,
               name: toko.jenisTravel,
               brand: 'mamank travel',
