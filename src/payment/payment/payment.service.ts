@@ -60,7 +60,7 @@ export class PaymentService {
 
         const parameter = {
           transaction_details: {
-            order_id: `idr${toko.CreateDateAt}`,
+            order_id: toko.id,
             gross_amount: parseInt(toko.harga),
           },
           item_details: [
@@ -119,7 +119,7 @@ export class PaymentService {
       });
       const parameter = {
         transaction_details: {
-          order_id: `idr${toko.CreateDateAt}`,
+          order_id: toko.id,
           gross_amount: parseInt(toko.harga),
         },
         item_details: [
@@ -233,7 +233,7 @@ export class PaymentService {
         });
         const parameter = {
           transaction_details: {
-            order_id: `idr${toko.CreateDateAt}`,
+            order_id: toko.id,
             gross_amount: parseInt(toko.harga),
           },
           item_details: [
@@ -295,7 +295,7 @@ export class PaymentService {
       });
       const parameter = {
         transaction_details: {
-          order_id: `idr${toko.CreateDateAt}`,
+          order_id: toko.id,
           gross_amount: parseInt(toko.harga),
         },
         item_details: [
