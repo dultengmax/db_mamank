@@ -77,10 +77,10 @@ export class PaymentService {
           ],
           customer_details: {
             first_name: user.userName,
-            phone: user.contact,
+            phone: parseInt(user.contact),
             billing_address: {
               first_name: user.userName,
-              phone: user.contact,
+              phone: parseInt(user.contact),
               address: user.address,
               city: user.kota,
               country_code: 'IDN',
@@ -136,10 +136,10 @@ export class PaymentService {
         ],
         customer_details: {
           first_name: findUser.userName,
-          phone: findUser.contact,
+          phone: parseInt(findUser.contact),
           billing_address: {
             first_name: findUser.userName,
-            phone: findUser.contact,
+            phone: parseInt(findUser.contact),
             address: findUser.address,
             city: findUser.kota,
             country_code: 'IDN',
@@ -250,10 +250,10 @@ export class PaymentService {
           ],
           customer_details: {
             first_name: user.userName,
-            phone: user.contact,
+            phone: parseInt(user.contact),
             billing_address: {
               first_name: user.userName,
-              phone: user.contact,
+              phone: parseInt(user.contact),
               address: user.address,
               city: user.kota,
               country_code: 'IDN',
@@ -312,10 +312,10 @@ export class PaymentService {
         ],
         customer_details: {
           first_name: findUser.userName,
-          phone: findUser.contact,
+          phone: parseInt(findUser.contact),
           billing_address: {
             first_name: findUser.userName,
-            phone: findUser.contact,
+            phone: parseInt(findUser.contact),
             address: findUser.address,
             city: findUser.kota,
             country_code: 'IDN',

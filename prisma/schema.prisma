@@ -66,8 +66,8 @@ model User {
   agenda        Agenda[]
   userName      String?      @unique
   password      String?
-  CreateDateAt  DateTime     @default(now())
-  UpdatedAt     DateTime     @updatedAt
+  CreateDateAt  DateTime?     @default(now())
+  UpdatedAt     DateTime?     @updatedAt
   Paket         Paket[]
   Rute          Rute[]
   travel        travel[]
