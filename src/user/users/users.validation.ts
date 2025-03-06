@@ -6,13 +6,9 @@ export const UserSchema = z.object({
     .min(1, {
       message: 'UserName Harus Di isi',
     })
-    .max(25, {
+    .max(100, {
       message: 'UserName Tidak lebih dari 15 ',
-    })
-    .refine((data) => !/\s/.test(data), {
-      message: 'tidak boleh di isi spasi',
     }),
-
   contact: z.string().min(1, {
     message: 'Email harus di isi',
   }),

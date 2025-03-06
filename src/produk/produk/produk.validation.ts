@@ -82,22 +82,22 @@ export const UserscemaTravel = z.object({
   nomorPengirim: z.string().min(2, {
     message: 'no pengirim harus di isi',
   }),
-  status: z.string().min(2, {
+  status: z.string().min(1, {
     message: 'nomor penerima ',
   }),
-  image: z.string().min(2, {
+  image: z.string().min(1, {
     message: 'nomor penerima ',
   }),
-  jadwal: z.string().min(2, {
+  jadwal: z.string().min(1, {
     message: 'nomor penerima ',
   }),
-  cityf: z.string().min(2, {
+  cityf: z.string().min(1, {
     message: 'nomor penerima ',
   }),
-  cityt: z.string().min(2, {
+  cityt: z.string().min(1, {
     message: 'nomor penerima ',
   }),
-  resi: z.string().min(2, {
+  resi: z.string().min(1, {
     message: 'resi penerima ',
   }),
 

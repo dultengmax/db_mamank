@@ -27,7 +27,6 @@ export class PaymentService {
       const findUser = await this.prisma.user.findUnique({
         where: { userName: result.namaPenumpang },
       });
-
       if (!findUser) {
         const user = await this.prisma.user.create({
           data: {
@@ -61,7 +60,7 @@ export class PaymentService {
 
         const parameter = {
           transaction_details: {
-            order_id: toko.id,
+            order_id: `idr${toko.CreateDateAt}`,
             gross_amount: parseInt(toko.harga),
           },
           item_details: [
@@ -77,10 +76,10 @@ export class PaymentService {
             },
           ],
           customer_details: {
-            first_name: user.name,
+            first_name: user.userName,
             phone: user.contact,
             billing_address: {
-              first_name: user.name,
+              first_name: user.userName,
               phone: user.contact,
               address: user.address,
               city: user.kota,
@@ -120,7 +119,7 @@ export class PaymentService {
       });
       const parameter = {
         transaction_details: {
-          order_id: toko.id,
+          order_id: `idr${toko.CreateDateAt}`,
           gross_amount: parseInt(toko.harga),
         },
         item_details: [
@@ -136,10 +135,10 @@ export class PaymentService {
           },
         ],
         customer_details: {
-          first_name: findUser.name,
+          first_name: findUser.userName,
           phone: findUser.contact,
           billing_address: {
-            first_name: findUser.name,
+            first_name: findUser.userName,
             phone: findUser.contact,
             address: findUser.address,
             city: findUser.kota,
@@ -228,13 +227,13 @@ export class PaymentService {
             pay: data.pay,
             jam: data.jam,
             resi: result.resi,
-            namaPenerima: 'pending',
-            namaPengirim: 'pending',
+            namaPenerima: result.namaPenerima,
+            namaPengirim: result.namaPengirim,
           },
         });
         const parameter = {
           transaction_details: {
-            order_id: toko.id,
+            order_id: `idr${toko.CreateDateAt}`,
             gross_amount: parseInt(toko.harga),
           },
           item_details: [
@@ -296,7 +295,7 @@ export class PaymentService {
       });
       const parameter = {
         transaction_details: {
-          order_id: toko.id,
+          order_id: `idr${toko.CreateDateAt}`,
           gross_amount: parseInt(toko.harga),
         },
         item_details: [
