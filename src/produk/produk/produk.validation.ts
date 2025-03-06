@@ -79,7 +79,7 @@ export const UserscemaTravel = z.object({
   mapfrom: z.string().min(1, {
     message: 'jenis paket harus di isi',
   }),
-  nomorPengirim: z.string().min(2, {
+  nomorPengirim: z.string().min(1, {
     message: 'no pengirim harus di isi',
   }),
   status: z.string().min(1, {
