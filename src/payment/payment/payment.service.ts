@@ -25,7 +25,10 @@ export class PaymentService {
     const result = await this.validate.validate(UserscemaTravel, data);
     try {
       const findUser = await this.prisma.user.findUnique({
-        where: { userName: result.namaPenumpang },
+        where: {
+          userName: result.namaPenumpang,
+          contact: result.nomorPengirim,
+        },
       });
       if (!findUser) {
         const user = await this.prisma.user.create({
@@ -195,7 +198,10 @@ export class PaymentService {
 
     try {
       const findUser = await this.prisma.user.findUnique({
-        where: { userName: result.namaPengirim },
+        where: {
+          userName: result.namaPengirim,
+          contact: result.nomorPengirim,
+        },
       });
 
       if (!findUser) {
