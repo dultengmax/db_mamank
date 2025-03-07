@@ -33,8 +33,7 @@ export class ProdukService {
         nomorPengirim: result.nomorPengirim,
         nomorPenerima: result.nomorPenerima,
         harga: result.harga,
-        fotoPaket: result.fotoPaket,
-        fotoPenerima: result.fotoPenerima,
+
         cityf: data.cityf,
         cityt: data.cityt,
         jadwal: data.jadwal,
@@ -86,8 +85,6 @@ export class ProdukService {
         nomorPengirim: result.nomorPengirim,
         nomorPenerima: result.nomorPenerima,
         harga: result.harga,
-        fotoPaket: result.fotoPaket,
-        fotoPenerima: result.fotoPenerima,
       },
     });
 
