@@ -24,13 +24,13 @@ export class PaymentService {
   async addPaymentTravel(data: StateTravel) {
     const result = await this.validate.validate(UserscemaTravel, data);
     try {
-      const findUser = await this.prisma.user.findUnique({
+      const findUser = await this.prisma.user.count({
         where: {
           userName: result.namaPenumpang,
           contact: result.nomorPengirim,
         },
       });
-      if (!findUser) {
+      if (findUser === 0) {
         const user = await this.prisma.user.create({
           data: {
             userName: result.namaPenumpang,
@@ -57,7 +57,7 @@ export class PaymentService {
             pay: result.pay,
             jam: data.jam,
             resi: result.resi,
-            AuthorId: findUser.contact,
+            AuthorId: result.nomorPengirim,
           },
         });
 
@@ -117,7 +117,7 @@ export class PaymentService {
           pay: result.pay,
           jam: data.jam,
           resi: result.resi,
-          AuthorId: findUser.contact,
+          AuthorId: result.nomorPengirim,
         },
       });
       const parameter = {
@@ -138,13 +138,13 @@ export class PaymentService {
           },
         ],
         customer_details: {
-          first_name: findUser.userName,
-          phone: parseInt(findUser.contact),
+          first_name: result.namaPenumpang,
+          phone: parseInt(result.nomorPengirim),
           billing_address: {
-            first_name: findUser.userName,
-            phone: parseInt(findUser.contact),
-            address: findUser.address,
-            city: findUser.kota,
+            first_name: result.namaPenumpang,
+            phone: parseInt(result.nomorPengirim),
+            address: result.cityt,
+            city: result.cityf,
             country_code: 'IDN',
           },
         },
@@ -197,14 +197,14 @@ export class PaymentService {
     const result = await this.validate.validate(UserscemaProduk, data);
 
     try {
-      const findUser = await this.prisma.user.findUnique({
+      const findUser = await this.prisma.user.count({
         where: {
           userName: result.namaPengirim,
           contact: result.nomorPengirim,
         },
       });
 
-      if (!findUser) {
+      if (findUser === 0) {
         const user = await this.prisma.user.create({
           data: {
             userName: result.namaPengirim,
@@ -225,8 +225,7 @@ export class PaymentService {
             nomorPengirim: result.nomorPengirim,
             nomorPenerima: result.nomorPenerima,
             harga: result.harga,
-            fotoPaket: result.fotoPaket,
-            fotoPenerima: result.fotoPenerima,
+
             cityf: data.cityf,
             cityt: data.cityt,
             jadwal: data.jadwal,
@@ -287,16 +286,14 @@ export class PaymentService {
           nomorPengirim: result.nomorPengirim,
           nomorPenerima: result.nomorPenerima,
           harga: result.harga,
-          fotoPaket: result.fotoPaket,
-          fotoPenerima: result.fotoPenerima,
           cityf: data.cityf,
           cityt: data.cityt,
           jadwal: data.jadwal,
           pay: data.pay,
           jam: data.jam,
           resi: result.resi,
-          namaPenerima: 'pending',
-          namaPengirim: 'pending',
+          namaPenerima: result.namaPenerima,
+          namaPengirim: result.namaPengirim,
         },
       });
       const parameter = {
@@ -317,13 +314,13 @@ export class PaymentService {
           },
         ],
         customer_details: {
-          first_name: findUser.userName,
-          phone: parseInt(findUser.contact),
+          first_name: result.namaPengirim,
+          phone: parseInt(result.nomorPengirim),
           billing_address: {
-            first_name: findUser.userName,
-            phone: parseInt(findUser.contact),
-            address: findUser.address,
-            city: findUser.kota,
+            first_name: result.namaPengirim,
+            phone: parseInt(result.nomorPengirim),
+            address: result.cityf,
+            city: result.cityf,
             country_code: 'IDN',
           },
         },
@@ -356,8 +353,6 @@ export class PaymentService {
           nomorPengirim: result.nomorPengirim,
           nomorPenerima: result.nomorPenerima,
           harga: result.harga,
-          fotoPaket: result.fotoPaket,
-          fotoPenerima: result.fotoPenerima,
           cityf: data.cityf,
           cityt: data.cityt,
           jadwal: data.jadwal,
