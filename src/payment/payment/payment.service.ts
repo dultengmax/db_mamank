@@ -176,6 +176,19 @@ export class PaymentService {
       throw new Error(`Failed to create transaction: ${error.message}`);
     }
   }
+  async deletePaymentTravel(resi: string) {
+    try {
+      const toko = await this.prisma.travel.delete({
+        where: {
+          resi: resi,
+        },
+      });
+
+      return toko;
+    } catch (error) {
+      throw new Error(`Failed to create transaction: ${error.message}`);
+    }
+  }
   async addPaymentPiket(data: StatePaket) {
     const result = await this.validate.validate(UserscemaProduk, data);
 
@@ -208,7 +221,6 @@ export class PaymentService {
             nomorPengirim: result.nomorPengirim,
             nomorPenerima: result.nomorPenerima,
             harga: result.harga,
-
             cityf: data.cityf,
             cityt: data.cityt,
             jadwal: data.jadwal,
@@ -325,8 +337,18 @@ export class PaymentService {
       const toko = await this.prisma.paket.update({
         where: { resi: resi },
         data: {
-          resi: data,
+          jenisPaket: data,
         },
+      });
+      return toko;
+    } catch (error) {
+      throw new Error(`Failed to create transaction: ${error.message}`);
+    }
+  }
+  async deletePaymentPiket(resi: string) {
+    try {
+      const toko = await this.prisma.paket.delete({
+        where: { resi: resi },
       });
       return toko;
     } catch (error) {

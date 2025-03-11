@@ -32,6 +32,13 @@ export class PaymentController {
   ) {
     return this.payment.EditPaymentTravel(data, resi);
   }
+  @Post('deleteTravel')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  @UseFilters(ValidationFilter)
+  async deletePaymentnTravel(@Query('resi') resi: string) {
+    return this.payment.deletePaymentTravel(resi);
+  }
   @Post('paket')
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
@@ -49,6 +56,13 @@ export class PaymentController {
     @Query('resi') resi: string,
   ) {
     return this.payment.editPaymentPiket(data, resi);
+  }
+  @Post('deletePaket')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  @UseFilters(ValidationFilter)
+  async deletePaymentPaket(@Query('resi') resi: string) {
+    return this.payment.deletePaymentPiket(resi);
   }
   @Get('findTravel')
   @HttpCode(200)
