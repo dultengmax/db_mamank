@@ -27,7 +27,7 @@ export class PaymentController {
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
   async editPaymentnTravel(
-    @Body() data: StateTravel,
+    @Query('data') data: string,
     @Query('resi') resi: string,
   ) {
     return this.payment.EditPaymentTravel(data, resi);
@@ -45,7 +45,7 @@ export class PaymentController {
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
   async editPaymentPaket(
-    @Body() data: StatePaket,
+    @Query('data') data: string,
     @Query('resi') resi: string,
   ) {
     return this.payment.editPaymentPiket(data, resi);

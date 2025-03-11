@@ -160,29 +160,14 @@ export class PaymentService {
       throw new Error(`Failed to create transaction: ${error.message}`);
     }
   }
-  async EditPaymentTravel(data: StateTravel, resi: string) {
-    const result = await this.validate.validate(UserscemaTravel, data);
+  async EditPaymentTravel(data: string, resi: string) {
     try {
       const toko = await this.prisma.travel.update({
         where: {
           resi: resi,
         },
         data: {
-          from: result.from,
-          to: result.to,
-          mapfrom: result.mapfrom,
-          mapto: result.mapto,
-          image: result.image,
-          status: result.status,
-          namaPenumpang: result.namaPenumpang,
-          jenisTravel: result.jenisTravel,
-          nomorPengirim: result.nomorPengirim,
-          harga: result.harga,
-          cityf: result.cityf,
-          cityt: result.cityt,
-          jadwal: result.jadwal,
-          pay: result.pay,
-          jam: data.jam,
+          status: data,
         },
       });
 
@@ -335,30 +320,12 @@ export class PaymentService {
       throw new Error(`Failed to create transaction: ${error.message}`);
     }
   }
-  async editPaymentPiket(data: StatePaket, resi: string) {
-    const result = await this.validate.validate(UserscemaProduk, data);
-
+  async editPaymentPiket(data: string, resi: string) {
     try {
       const toko = await this.prisma.paket.update({
         where: { resi: resi },
         data: {
-          isipaket: result.isipaket,
-          from: result.from,
-          to: result.to,
-          berat: result.berat,
-          volume: result.volume,
-          jenisPaket: result.jenisPaket,
-          nomorPengirim: result.nomorPengirim,
-          nomorPenerima: result.nomorPenerima,
-          harga: result.harga,
-          cityf: data.cityf,
-          cityt: data.cityt,
-          jadwal: data.jadwal,
-          pay: data.pay,
-          jam: data.jam,
-          resi: result.resi,
-          namaPenerima: result.namaPenerima,
-          namaPengirim: result.namaPengirim,
+          resi: data,
         },
       });
       return toko;
