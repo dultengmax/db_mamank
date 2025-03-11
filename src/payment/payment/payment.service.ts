@@ -20,7 +20,6 @@ export class PaymentService {
       serverKey: 'SB-Mid-server-lVyqZj-3S-PvV9a0_nKggFES', // Ganti dengan server key Anda
     });
   }
-
   async addPaymentTravel(data: StateTravel) {
     const result = await this.validate.validate(UserscemaTravel, data);
     try {
@@ -161,12 +160,12 @@ export class PaymentService {
       throw new Error(`Failed to create transaction: ${error.message}`);
     }
   }
-  async EditPaymentTravel(data: StateTravel, id: string) {
+  async EditPaymentTravel(data: StateTravel, resi: string) {
     const result = await this.validate.validate(UserscemaTravel, data);
     try {
       const toko = await this.prisma.travel.update({
         where: {
-          id: id,
+          resi: resi,
         },
         data: {
           from: result.from,
@@ -192,7 +191,6 @@ export class PaymentService {
       throw new Error(`Failed to create transaction: ${error.message}`);
     }
   }
-
   async addPaymentPiket(data: StatePaket) {
     const result = await this.validate.validate(UserscemaProduk, data);
 
@@ -337,12 +335,12 @@ export class PaymentService {
       throw new Error(`Failed to create transaction: ${error.message}`);
     }
   }
-  async editPaymentPiket(data: StatePaket, id: string) {
+  async editPaymentPiket(data: StatePaket, resi: string) {
     const result = await this.validate.validate(UserscemaProduk, data);
 
     try {
       const toko = await this.prisma.paket.update({
-        where: { id: id },
+        where: { resi: resi },
         data: {
           isipaket: result.isipaket,
           from: result.from,
@@ -359,8 +357,8 @@ export class PaymentService {
           pay: data.pay,
           jam: data.jam,
           resi: result.resi,
-          namaPenerima: 'pending',
-          namaPengirim: 'pending',
+          namaPenerima: result.namaPenerima,
+          namaPengirim: result.namaPengirim,
         },
       });
       return toko;
@@ -368,9 +366,12 @@ export class PaymentService {
       throw new Error(`Failed to create transaction: ${error.message}`);
     }
   }
-
   async Travelall() {
     const travels = await this.prisma.travel.findMany({});
+    return travels;
+  }
+  async Paketall() {
+    const travels = await this.prisma.paket.findMany({});
     return travels;
   }
   async TravelFind(resi: string) {

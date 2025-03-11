@@ -26,8 +26,11 @@ export class PaymentController {
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
-  async editPaymentnTravel(@Body() data: StateTravel, @Query('id') id: string) {
-    return this.payment.EditPaymentTravel(data, id);
+  async editPaymentnTravel(
+    @Body() data: StateTravel,
+    @Query('resi') resi: string,
+  ) {
+    return this.payment.EditPaymentTravel(data, resi);
   }
   @Post('paket')
   @HttpCode(200)
@@ -41,14 +44,23 @@ export class PaymentController {
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   @UseFilters(ValidationFilter)
-  async editPaymentPaket(@Body() data: StatePaket, @Query('id') id: string) {
-    return this.payment.editPaymentPiket(data, id);
+  async editPaymentPaket(
+    @Body() data: StatePaket,
+    @Query('resi') resi: string,
+  ) {
+    return this.payment.editPaymentPiket(data, resi);
   }
   @Get('findTravel')
   @HttpCode(200)
   @Header('Content-Type', 'application/json')
   async FindTravel() {
     return this.payment.Travelall();
+  }
+  @Get('findPaket')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/json')
+  async FindPaket() {
+    return this.payment.Paketall();
   }
   @Get('findResiTravel')
   @HttpCode(200)
