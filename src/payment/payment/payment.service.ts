@@ -7,7 +7,6 @@ import {
   UserscemaTravel,
 } from 'src/produk/produk/produk.validation';
 import { ValidationService } from 'src/validation/validation/validation.service';
-import { nanoid } from 'nanoid';
 
 @Injectable()
 export class PaymentService {
@@ -59,15 +58,14 @@ export class PaymentService {
             AuthorId: result.nomorPengirim,
           },
         });
-        const order_id = nanoid(10);
         const parameter = {
           transaction_details: {
-            order_id: order_id,
+            order_id: toko.id,
             gross_amount: parseInt(toko.harga),
           },
           item_details: [
             {
-              id: toko.id,
+              id: 1122,
               price: parseInt(toko.harga),
               quantity: 1,
               name: toko.jenisTravel,
@@ -119,16 +117,15 @@ export class PaymentService {
           AuthorId: result.nomorPengirim,
         },
       });
-      const order_id = nanoid(10);
 
       const parameter = {
         transaction_details: {
-          order_id: order_id,
+          order_id: toko.id,
           gross_amount: parseInt(toko.harga),
         },
         item_details: [
           {
-            id: toko.id,
+            id: 1122,
             price: parseInt(toko.harga),
             quantity: 1,
             name: toko.jenisTravel,
@@ -232,16 +229,15 @@ export class PaymentService {
             namaPengirim: result.namaPengirim,
           },
         });
-        const order_id = nanoid(10);
 
         const parameter = {
           transaction_details: {
-            order_id: order_id,
+            order_id: toko.id,
             gross_amount: parseInt(toko.harga),
           },
           item_details: [
             {
-              id: toko.id,
+              id: 1123,
               price: parseInt(toko.harga),
               quantity: 1,
               name: toko.isipaket,
@@ -294,16 +290,15 @@ export class PaymentService {
           namaPengirim: result.namaPengirim,
         },
       });
-      const order_id = nanoid(10);
 
       const parameter = {
         transaction_details: {
-          order_id: order_id,
+          order_id: toko.id,
           gross_amount: parseInt(toko.harga),
         },
         item_details: [
           {
-            id: toko.id,
+            id: 1123,
             price: parseInt(toko.harga),
             quantity: 1,
             name: toko.isipaket,
