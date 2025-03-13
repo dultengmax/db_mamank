@@ -26,7 +26,6 @@ export class PaymentService {
       const findUser = await this.prisma.user.count({
         where: {
           userName: result.namaPenumpang,
-          contact: result.nomorPengirim,
         },
       });
       if (findUser === 0) {
@@ -196,7 +195,6 @@ export class PaymentService {
       const findUser = await this.prisma.user.count({
         where: {
           userName: result.namaPengirim,
-          contact: result.nomorPengirim,
         },
       });
 
