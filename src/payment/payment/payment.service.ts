@@ -16,8 +16,8 @@ export class PaymentService {
     private validate: ValidationService,
   ) {
     this.snap = new Snap({
-      isProduction: false, // Set true untuk mode production
-      serverKey: 'SB-Mid-server-lVyqZj-3S-PvV9a0_nKggFES', // Ganti dengan server key Anda
+      isProduction: true, // Set true untuk mode production
+      serverKey: process.env.MD_SERVER, // Ganti dengan server key Anda
     });
   }
   async addPaymentTravel(data: StateTravel) {
