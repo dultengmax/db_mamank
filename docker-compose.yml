@@ -6,10 +6,15 @@ services:
       - '3001:3001'
     volumes:
       - uploads:/app/uploads
+    environment:
+      - DATABASE_URL=postgresql://nestjs2:mamank_travel1234@db:5432/mamank_travel
+      - password="226bca3c-d192-4fd4-a622-8da16d14b7bd"
+      - MD_SERVER="Mid-server-OOLFiWv2J44KPbWY6WyYIKdj"
+      - ClIENT_KEY="Mid-client-YZLLHG0WVKq1o_e9"
+      - MERCHANT_ID="G854909310"
+
     depends_on:
       - db
-    env_file:
-      - .env
   db:
     image: postgres:17
     environment:
