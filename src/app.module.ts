@@ -34,6 +34,7 @@ import { PaymentService } from './payment/payment/payment.service';
     UserModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env', // Path ke file .env
     }),
     PrismaModule,
     ValidationModule.forRoot(true),

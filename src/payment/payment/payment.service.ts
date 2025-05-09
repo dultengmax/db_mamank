@@ -7,6 +7,7 @@ import {
   UserscemaTravel,
 } from 'src/produk/produk/produk.validation';
 import { ValidationService } from 'src/validation/validation/validation.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PaymentService {
@@ -14,10 +15,14 @@ export class PaymentService {
   constructor(
     private prisma: PrismaService,
     private validate: ValidationService,
+    private configService: ConfigService,
   ) {
     this.snap = new Snap({
       isProduction: true, // Set true untuk mode production
-      serverKey: process.env.MD_SERVER, // Ganti dengan server key Anda
+      serverKey: this.configService.get('MD_SERVER'),
+      clientKey: this.configService.get('CLIENT_KEY'), // Ganti dengan client key Anda
+
+      // Ganti dengan server key Anda
     });
   }
   async addPaymentTravel(data: StateTravel) {
